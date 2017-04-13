@@ -3,17 +3,16 @@ include_once("connection.php");
 $allowedExts = array("mp4","ogg","webm");
 $extension = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
 var_dump($_FILES['file']);
-echo "test db";
 $rows = $_DB->query("Select * from actions");
 if($rows !== false){
   foreach ($rows as $row) {
     print_r($row);
   }
 }
-if ( (($_FILES["file"]["type"] == "video/mp4")
+if ( ( ($_FILES["file"]["type"] == "video/mp4")
         || ($_FILES["file"]["type"] == "video/ogg")
         || ($_FILES["file"]["type"] == "video/webm")
-        && in_array($extension, $allowedExts))
+        && in_array($extension, $allowedExts)) )
     {
     if ($_FILES["file"]["error"] > 0)
       {
