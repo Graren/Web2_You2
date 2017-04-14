@@ -15,6 +15,10 @@
         Globals::$_DB = $pdo;
     }
 
+     public static function closePDO(){
+         Globals::$_DB = null;
+     }
+
     public static function getPDO(){
         return Globals::$_DB;
     }

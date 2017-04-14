@@ -9,15 +9,52 @@
         return substr(md5(rand()), 0, 7);
     }
 
+    function getSingleVideo($id_video){
+        $res = new YaySon();
+        $data = getVideoData($_GET["id_video"]);
+
+        if(!isset($data)){
+            $res->add("status",404);
+            $res->add("message","File not found");
+        }
+        else{
+            $data->add("comments",getVideoComments($id_video)->get('comments'));
+            $data->add("tags",getVideoTags($id_video)->get('tags'));
+            $res->add("status",200);
+            $res->add("data", $data->getArr());
+        }
+        return $res;
+    }
+
+    function getAll(){
+        //I AM NOT GENERATING THUMBNAILS, SEE react-native-asset-thumbnail
+        $res = new YaySon();
+        $data = getAllVideos();
+        if(!isset($data)){
+            $res->add("status",404);
+            $res->add("message","File not found");
+        }
+        else{
+            $res->add("status",200);
+            $res->add("data", $data->get('videos'));
+        }
+        return $res;
+    }
+
+    header("Content-Type: application/json");
     $res = new YaySon();
-
     session_start();
-    switch($_SERVER["REQUEST_METHOD"]){
+    switch($_SERVER['REQUEST_METHOD']){
         case "GET":
-            
+            if(isset($_GET["id_video"])){
+                $id_video = $_GET["id_video"];
+                $res = getSingleVideo($id_video);
+            }
+            else{
+                $res = getAll();
+            }
+                echo $res->toJSON();
             break;
-
-
         case"POST":
             if(!is_uploaded_file($_FILES['file']['tmp_name'])){
 
@@ -50,10 +87,10 @@
                             echo "MAKING DIR";
                             mkdir(Globals::getProjectRoute(). "../../static");
                         }
-                        $insertResult =insert_video($_DB,$_POST["id_user"],$_FILES["file"]["name"],$_POST["description"],
+                        $insertResult =insert_video($_POST["id_user"],$_FILES["file"]["name"],$_POST["description"],
                             $_POST["length"],Globals::getVideoPath() . $savedName);
 
-                        if($insertResult->get("status") === 200){
+                        if(isset($insertResult)){
                             move_uploaded_file($_FILES["file"]["tmp_name"],
                                 Globals::getVideoPath(). $savedName) or die ("FAGGOT");
                             $data->add("id_video",$insertResult->get('status'));
@@ -73,7 +110,6 @@
                     $res->add("message","Invalid file type");
                 }
             }
-
             echo $res->toJSON();
             break;
     }
