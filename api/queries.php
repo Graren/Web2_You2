@@ -11,6 +11,10 @@
                        (" . $id_user . ",". $pdo->quote($name) . "," .$pdo->quote($description) . "," .
                         $pdo->quote($length) . "," . 'current_date' . "," . $pdo->quote($path) .") RETURNING id_video,date";
         $stmt = $pdo->query($sql_insert);
+        if($stmt === false){
+            unset($res);
+            return;
+        }
         $arr = $stmt->fetch(PDO::FETCH_ASSOC);
         if( !isset($arr) ){
             unset($res);
@@ -34,6 +38,10 @@
                     INNER JOIN users ON video.id_user = users.id_user
                     WHERE video.id_video = $id_video";
         $stmt = $pdo->query($sql);
+        if($stmt === false){
+            unset($res);
+            return;
+        }
         $arr = $stmt->fetch(PDO::FETCH_ASSOC);
         if( !isset($arr) ){
             unset($res);
@@ -59,6 +67,10 @@
                     INNER JOIN video ON comments.id_video = video.id_video
                     WHERE video.id_video = $id_video";
     $stmt = $pdo->query($sql);
+    if($stmt === false){
+        unset($res);
+        return;
+    }
     $arr = $stmt->fetchAll(PDO::FETCH_ASSOC);
     if( !isset($arr) ){
         unset($res);
@@ -86,6 +98,10 @@
                         INNER JOIN tag ON video_tag.id_tag = tag.id_tag
                         WHERE video.id_video = $id_video";
     $stmt = $pdo->query($sql);
+    if($stmt === false){
+        unset($res);
+        return;
+    }
     $arr = $stmt->fetchAll(PDO::FETCH_ASSOC);
     if( !isset($arr) ){
         unset($res);
@@ -110,6 +126,10 @@
                     FROM video
                     INNER JOIN users ON video.id_user = users.id_user";
     $stmt = $pdo->query($sql);
+    if($stmt === false){
+        unset($res);
+        return;
+    }
     $arr = $stmt->fetchAll(PDO::FETCH_ASSOC);
     if( !isset($arr) ){
         unset($res);
@@ -129,3 +149,26 @@
     return $res;
 }
 
+function login($email,$password){
+    $pdo = GLOBALS::getPDO();
+    $res = new YaySon();
+    $sql = "SELECT id_user,email,password,username
+            FROM users
+            WHERE email=" .$pdo->quote($email). "AND password=" . $pdo->quote($password);
+    $stmt = $pdo->query($sql);
+    if($stmt === false){
+        unset($res);
+        return;
+    }
+    $arr = $stmt->fetch(PDO::FETCH_ASSOC);
+    if( !isset($arr) ){
+        unset($res);
+    }else{
+        $res->add("id_user",$arr['id_user']);
+        $res->add("email",$arr['email']);
+        $res->add("password",$arr['password']);
+        $res->add("username",$arr['username']);
+    }
+    return $res;
+
+}
