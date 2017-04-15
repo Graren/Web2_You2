@@ -47,6 +47,8 @@
         return $res;
     }
 
+
+
     function getName($videoPath){
         $path_parts = pathinfo($videoPath);
         return $path_parts['filename'];
@@ -111,8 +113,9 @@
                                 echo "MAKING DIR";
                                 mkdir(Globals::getProjectRoute(). "../../static");
                             }
+                            $tags = explode(",",$_POST["tags"]);
                             $insertResult =insert_video($_POST["id_user"],$_FILES["file"]["name"],$_POST["description"],
-                                $_POST["length"],Globals::getVideoPath() . $savedName);
+                                $_POST["length"],Globals::getVideoPath() . $savedName,$tags);
 
                             if(isset($insertResult)){
                                 move_uploaded_file($_FILES["file"]["tmp_name"],
