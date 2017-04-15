@@ -57,7 +57,7 @@
     header("Content-Type: application/json");
     $res = new YaySon();
     session_start();
-    if(!isset($_SESSION["email"]) && !isset($_SESSION["username"])){
+    if(!isset($_SESSION["email"]) && !isset($_SESSION["name"])){
         $res->add("status",403);
         $res->add("message","FUCK MAN LOGIN");
         echo $res->toJSON();

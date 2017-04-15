@@ -27,7 +27,7 @@
         }
         else{
             $res->add("status",500);
-            $res->add("message","Error Liking");
+            $res->add("message","Error");
         }
     }
     echo $res->toJSON();

@@ -1,6 +1,7 @@
 <?php
     include_once("Globals.php");
     include_once("YaySon.php");
+// Fix every function, get every $arr under an else, if stmt fails, it must not execute
 ///////////////////////////////////video/////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////
     function insert_video($id_user,$name,$description,$length,$path,$tags){
@@ -14,28 +15,30 @@
         $stmt = $pdo->query($sql_insert);
         if($stmt === false){
             unset($res);
-            return;
+
         }
-        $arr = $stmt->fetch(PDO::FETCH_ASSOC);
-        if( $arr === false ){
-            unset($res);
-        }else{
-            foreach($tags as $tag){
-                $found = getTagByName($tag);
-                $id_tag = null;
-                if($found->get('found')){
-                    $id_tag = $found->get('id_tag');
+        else{
+            $arr = $stmt->fetch(PDO::FETCH_ASSOC);
+            if( $arr === false ){
+                unset($res);
+            }else{
+                foreach($tags as $tag){
+                    $found = getTagByName($tag);
+                    $id_tag = null;
+                    if($found->get('found')){
+                        $id_tag = $found->get('id_tag');
+                    }
+                    else{
+                        $id_tag = insertTag($tag)->get('id_tag');
+                    }
+                    $done = insertTagsToVideo($arr['id_video'],$id_tag)->get('created');
+                    if($done == false){
+                        $res->add('message','something went wrong adding tags');
+                    }
                 }
-                else{
-                    $id_tag = insertTag($tag)->get('id_tag');
-                }
-                $done = insertTagsToVideo($arr['id_video'],$id_tag)->get('created');
-                if($done == false){
-                    $res->add('message','something went wrong adding tags');
-                }
+                $res->add("id_video",$arr['id_video']);
+                $res->add("date",$arr['date']);
             }
-            $res->add("id_video",$arr['id_video']);
-            $res->add("date",$arr['date']);
         }
         return $res;
     }
@@ -55,21 +58,114 @@
         if($stmt === false){
             unset($res);
         }
-        $arr = $stmt->fetch(PDO::FETCH_ASSOC);
-        if( $arr === false ){
-            unset($res);
-        }else{
-            $res->add("id_video",$arr['id_video']);
-            $res->add("description",$arr['description']);
-            $res->add("name",$arr['video_name']);
-            $res->add("date",$arr['date']);
-            $res->add("path",$arr['path']);
-            $res->add("likes",$arr['likes']);
-            $res->add("dislikes",$arr['dislikes']);
-            $res->add("username",$arr['uploader']);
+        else{
+            $arr = $stmt->fetch(PDO::FETCH_ASSOC);
+            if( $arr === false ){
+                unset($res);
+            }else{
+                $res->add("id_video",$arr['id_video']);
+                $res->add("description",$arr['description']);
+                $res->add("name",$arr['video_name']);
+                $res->add("date",$arr['date']);
+                $res->add("path",$arr['path']);
+                $res->add("likes",$arr['likes']);
+                $res->add("dislikes",$arr['dislikes']);
+                $res->add("username",$arr['uploader']);
+            }
         }
         return $res;
 
+    }
+
+    function getVideosByNamePaginated($query,$page){
+        $limit=10;
+        $offset= 10 * ($page-1);
+        $pdo = GLOBALS::getPDO();
+        $res = new YaySon();
+        $sql = "SELECT video.id_video, video.description, video.name as video_name, video.date, video.length, video.path,
+                users.username as uploader
+                FROM video
+                INNER JOIN users ON video.id_user = users.id_user ";
+        $words = explode(" ",$query);
+        $index = 0;
+        foreach($words as $word){
+            if($index === 0){
+                $sql .= "WHERE video.name LIKE '%" .$word. "%' ";
+            }
+            else{
+                $sql .= "OR video.name LIKE '%" .$word. "%' ";
+            }
+            $index++;
+        }
+        $sql .= "LIMIT $limit OFFSET $offset";
+        $stmt = $pdo->query($sql);
+        if($stmt === false){
+            unset($res);
+        }
+        else{
+            $arr = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            if( $arr === false ){
+                unset($res);
+            }else{
+                $tmpArray =array();
+                foreach($arr as $row){
+                    $tmp = new YaySon;
+                    $tmp->add("id_video",$row['id_video']);
+                    $tmp->add("description",$row['description']);
+                    $tmp->add("name",$row['video_name']);
+                    $tmp->add("date",$row['date']);
+                    $tmp->add("path",$row['path']);
+                    $tmp->add("username",$row['uploader']);
+                    array_push($tmpArray,$tmp->getArr());
+                }
+                $res->add("videos",$tmpArray);
+            }
+        }
+        return $res;
+    }
+
+    function getUserVideosPaginated($id_user,$page){
+        $limit=10;
+        $offset= 10 * ($page-1);
+        $pdo = GLOBALS::getPDO();
+        $res = new YaySon();
+        $sql = "SELECT video.id_video, video.description, video.name as video_name, video.date, video.length, video.path,
+                    users.username as uploader
+                    FROM video
+                    INNER JOIN users ON video.id_user = users.id_user
+                    WHERE users.id_user= $id_user ";
+        $sql .= "LIMIT $limit OFFSET $offset";
+        $stmt = $pdo->query($sql);
+        if($stmt === false){
+            unset($res);
+        }
+        else{
+            $arr = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            if( $arr === false ){
+                unset($res);
+            }else{
+                $tmpArray =array();
+                foreach($arr as $row){
+                    $tmp = new YaySon;
+                    $tmp->add("id_video",$row['id_video']);
+                    $tmp->add("description",$row['description']);
+                    $tmp->add("name",$row['video_name']);
+                    $tmp->add("date",$row['date']);
+                    $tmp->add("path",$row['path']);
+                    $tmp->add("username",$row['uploader']);
+                    $thumb = getThumbnail($row['id_video']);
+                    if (isset($thumb)) {
+                        $tmp->add("thumbnail", $thumb->getArr());
+
+                    } else {
+                        $tmp->add("thumbnail", "");
+                    }
+                    array_push($tmpArray,$tmp->getArr());
+                }
+                $res->add("videos",$tmpArray);
+            }
+        }
+        return $res;
     }
 
     function getVideoAndThumbnail($id_video)
@@ -105,34 +201,36 @@ function getAllVideos(){
     if($stmt === false){
         unset($res);
     }
-    $arr = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    if( $arr === false ){
-        unset($res);
-    }else{
-        $tmpArray =array();
-        foreach($arr as $row){
-            $tmp = new YaySon;
-            $thumb = getThumbnail($row['id_video']);
-            if (isset($thumb)) {
-                $tmp->add("thumbnail", $thumb->getArr());
-            } else {
-                $tmp->add("thumbnail", "");
+    else{
+        $arr = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        if( $arr === false ){
+            unset($res);
+        }else{
+            $tmpArray =array();
+            foreach($arr as $row){
+                $tmp = new YaySon;
+                $thumb = getThumbnail($row['id_video']);
+                if (isset($thumb)) {
+                    $tmp->add("thumbnail", $thumb->getArr());
+                } else {
+                    $tmp->add("thumbnail", "");
+                }
+                $tmp->add("id_video",$row['id_video']);
+                $tmp->add("description",$row['description']);
+                $tmp->add("name",$row['video_name']);
+                $tmp->add("date",$row['date']);
+                $tmp->add("username",$row['uploader']);
+                array_push($tmpArray,$tmp->getArr());
             }
-            $tmp->add("id_video",$row['id_video']);
-            $tmp->add("description",$row['description']);
-            $tmp->add("name",$row['video_name']);
-            $tmp->add("date",$row['date']);
-            $tmp->add("username",$row['uploader']);
-            array_push($tmpArray,$tmp->getArr());
+            $res->add("videos",$tmpArray);
         }
-        $res->add("videos",$tmpArray);
     }
     return $res;
 }
 
 function getAllVideosPaginated($page){
     $limit=10;
-    $offset= 10*$page;
+    $offset= 10 * ($page-1);
     $pdo = GLOBALS::getPDO();
     $res = new YaySon();
     $sql = "SELECT video.id_video, video.description, video.name as video_name, video.date, video.length,
@@ -143,7 +241,6 @@ function getAllVideosPaginated($page){
     $stmt = $pdo->query($sql);
     if($stmt === false){
         unset($res);
-        return;
     }
     $arr = $stmt->fetchAll(PDO::FETCH_ASSOC);
     if( $arr === false ){
@@ -188,7 +285,6 @@ function likeVideo($id_video,$id_user){
         $sql = "UPDATE user_like_video SET id_action=1, date=current_date
                 WHERE id_video=$id_video AND id_user=$id_user RETURNING id_video,id_user" ;
     }
-    echo $sql;
     $stmt = $pdo->query($sql);
     if($stmt === false){
         $res->add('created',false);
@@ -254,6 +350,78 @@ function hasUserLiked($id_video,$id_user){
         }
     }
 }
+
+function getLastWeekLikes($id_video){
+    $pdo = GLOBALS::getPDO();
+    $res = new YaySon();
+    $sql = "Select (select count(id_action) FROM user_like_video WHERE date = current_date AND id_action=1 AND id_video = $id_video) as day_7, (Select current_date) as d7,
+	(select count(id_action) FROM user_like_video WHERE date = current_date - interval '1 day' AND id_action=1 AND id_video = $id_video) as day_6, (Select current_date - interval '1 day') as d6,
+	(select count(id_action) FROM user_like_video WHERE date = current_date - interval '2 day' AND id_action=1 AND id_video = $id_video) as day_5, (Select current_date - interval '2 day') as d5,
+	(select count(id_action) FROM user_like_video WHERE date = current_date - interval '3 day' AND id_action=1 AND id_video = $id_video) as day_4, (Select current_date - interval '3 day') as d4,
+	(select count(id_action) FROM user_like_video WHERE date = current_date - interval '4 day' AND id_action=1 AND id_video = $id_video) as day_3, (Select current_date - interval '4 day') as d3,
+	(select count(id_action) FROM user_like_video WHERE date = current_date - interval '5 day' AND id_action=1 AND id_video = $id_video) as day_2, (Select current_date - interval '5 day') as d2,
+	(select count(id_action) FROM user_like_video WHERE date = current_date - interval '6 day' AND id_action=1 AND id_video = $id_video) as day_1, (Select current_date - interval '6 day') as d1";
+
+    $stmt = $pdo->query($sql);
+    if($stmt === false){
+        unset($res);
+    }
+    else{
+
+        $arr = $stmt->fetch(PDO::FETCH_ASSOC);
+        if( $arr === false ){
+            $res->add('finished',false);
+            unset($res);
+        }else{
+            $dayData =new YaySon();
+            for($i = 1; $i < 8; $i++){
+                $y = new YaySon();
+                $y->add("date",$arr["d$i"]);
+                $y->add("day_$i",$arr["day_$i"]);
+                $dayData->add("day_$i",$y->getArr());
+            }
+            $res->add("data",$dayData->getArr());
+            $res->add("finished",true);
+        }
+    }
+    return $res;
+}
+
+function getLastWeekDislikes($id_video){
+    $pdo = GLOBALS::getPDO();
+    $res = new YaySon();
+    $sql = "Select (select count(id_action) FROM user_like_video WHERE date = current_date AND id_action=2 AND id_video = $id_video) as day_7, (Select current_date) as d7,
+	(select count(id_action) FROM user_like_video WHERE date = current_date - interval '1 day' AND id_action=2 AND id_video = $id_video) as day_6, (Select current_date - interval '1 day') as d6,
+	(select count(id_action) FROM user_like_video WHERE date = current_date - interval '2 day' AND id_action=2 AND id_video = $id_video) as day_5, (Select current_date - interval '2 day') as d5,
+	(select count(id_action) FROM user_like_video WHERE date = current_date - interval '3 day' AND id_action=2 AND id_video = $id_video) as day_4, (Select current_date - interval '3 day') as d4,
+	(select count(id_action) FROM user_like_video WHERE date = current_date - interval '4 day' AND id_action=2 AND id_video = $id_video) as day_3, (Select current_date - interval '4 day') as d3,
+	(select count(id_action) FROM user_like_video WHERE date = current_date - interval '5 day' AND id_action=2 AND id_video = $id_video) as day_2, (Select current_date - interval '5 day') as d2,
+	(select count(id_action) FROM user_like_video WHERE date = current_date - interval '6 day' AND id_action=2 AND id_video = $id_video) as day_1, (Select current_date - interval '6 day') as d1";
+
+    $stmt = $pdo->query($sql);
+    if($stmt === false){
+        unset($res);
+    }
+    else{
+
+        $arr = $stmt->fetch(PDO::FETCH_ASSOC);
+        if( $arr === false ){
+            $res->add('finished',false);
+            unset($res);
+        }else{
+            $dayData =new YaySon();
+            for($i = 1; $i < 8; $i++){
+                $y = new YaySon();
+                $y->add("date",$arr["d$i"]);
+                $y->add("day_$i",$arr["day_$i"]);
+                $dayData->add("day_$i",$y->getArr());
+            }
+            $res->add("data",$dayData->getArr());
+            $res->add("finished",true);
+        }
+    }
+    return $res;
+}
 /////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -297,21 +465,23 @@ function hasUserLiked($id_video,$id_user){
         unset($res);
         return;
     }
-    $arr = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    if( $arr === false ){
-        unset($res);
-    }else{
-        $tmpArray =array();
-        foreach($arr as $row){
-            $tmp = new YaySon;
-            $tmp->add("id_user",$row['id_user']);
-            $tmp->add("name",$row['name']);
-            $tmp->add("username",$row['username']);
-            $tmp->add("comment",$row['message']);
-            $tmp->add("id_comment",$row['id_comment']);
-            array_push($tmpArray,$tmp->getArr());
+    else{
+        $arr = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        if( $arr === false ){
+            unset($res);
+        }else{
+            $tmpArray =array();
+            foreach($arr as $row){
+                $tmp = new YaySon;
+                $tmp->add("id_user",$row['id_user']);
+                $tmp->add("name",$row['name']);
+                $tmp->add("username",$row['username']);
+                $tmp->add("comment",$row['message']);
+                $tmp->add("id_comment",$row['id_comment']);
+                array_push($tmpArray,$tmp->getArr());
+            }
+            $res->add("comments",$tmpArray);
         }
-        $res->add("comments",$tmpArray);
     }
     return $res;
 }
@@ -333,18 +503,20 @@ function hasUserLiked($id_video,$id_user){
         unset($res);
         return;
     }
-    $arr = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    if( $arr === false ){
-        unset($res);
-    }else{
-        $tmpArray =array();
-        foreach($arr as $row){
-            $tmp = new YaySon;
-            $tmp->add("id_tag",$row['id_tag']);
-            $tmp->add("name",$row['name']);
-            array_push($tmpArray,$tmp->getArr());
+    else{
+        $arr = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        if( $arr === false ){
+            unset($res);
+        }else{
+            $tmpArray =array();
+            foreach($arr as $row){
+                $tmp = new YaySon;
+                $tmp->add("id_tag",$row['id_tag']);
+                $tmp->add("name",$row['name']);
+                array_push($tmpArray,$tmp->getArr());
+            }
+            $res->add("tags",$tmpArray);
         }
-        $res->add("tags",$tmpArray);
     }
     return $res;
 }
@@ -423,14 +595,16 @@ function login($email,$password){
         unset($res);
         return;
     }
-    $arr = $stmt->fetch(PDO::FETCH_ASSOC);
-    if( $arr === false ){
-        unset($res);
-    }else{
-        $res->add("id_user",$arr['id_user']);
-        $res->add("email",$arr['email']);
-        $res->add("password",$arr['password']);
-        $res->add("username",$arr['username']);
+    else{
+        $arr = $stmt->fetch(PDO::FETCH_ASSOC);
+        if( $arr === false ){
+            unset($res);
+        }else{
+            $res->add("id_user",$arr['id_user']);
+            $res->add("email",$arr['email']);
+            $res->add("password",$arr['password']);
+            $res->add("username",$arr['username']);
+        }
     }
     return $res;
 }
@@ -449,13 +623,15 @@ function signUp($email,$password,$username){
         unset($res);
         return;
     }
-    $arr = $stmt->fetch(PDO::FETCH_ASSOC);
-    if( $arr === false ){
-        unset($res);
-    }else{
-        $res->add("id_user",$arr['id_user']);
-        $res->add("email",$arr['email']);
-        $res->add("username",$arr['username']);
+    else{
+        $arr = $stmt->fetch(PDO::FETCH_ASSOC);
+        if( $arr === false ){
+            unset($res);
+        }else{
+            $res->add("id_user",$arr['id_user']);
+            $res->add("email",$arr['email']);
+            $res->add("username",$arr['username']);
+        }
     }
     return $res;
 }
@@ -471,38 +647,49 @@ function closeAcount($email){
         unset($res);
         return;
     }
-    $arr = $stmt->fetch(PDO::FETCH_ASSOC);
-    if( $arr === false ){
-        unset($res);
-    }else{
-        $res->add("id_user",$arr['id_user']);
+    else{
+        $arr = $stmt->fetch(PDO::FETCH_ASSOC);
+        if( $arr === false ){
+            unset($res);
+        }else{
+            $res->add("id_user",$arr['id_user']);
+        }
     }
     return $res;
 }
 
-function getUserData($id_user){
+function getUserData($username){
     $pdo = GLOBALS::getPDO();
     $res = new YaySon();
     $sql = "SELECT id_user,email,username
             FROM users
-            WHERE id_user=" . $id_user ;
+            WHERE username=" . $pdo->quote($username) ;
     $stmt = $pdo->query($sql);
     if($stmt === false){
         unset($res);
         return;
     }
-    $arr = $stmt->fetch(PDO::FETCH_ASSOC);
-    if( $arr === false ){
-        unset($res);
-    }else{
-        $res->add("id_user",$arr['id_user']);
-        $res->add("email",$arr['email']);
-        $res->add("password",$arr['password']);
-        $res->add("username",$arr['username']);
+    else{
+        $arr = $stmt->fetch(PDO::FETCH_ASSOC);
+        if( $arr === false ){
+            unset($res);
+        }else{
+            $res->add("id_user",$arr['id_user']);
+            $res->add("email",$arr['email']);
+            $res->add("username",$arr['username']);
+        }
     }
     return $res;
 }
 
+function getProfileData($username,$page){
+    $res = new YaySon();
+    $user = getUserData($username);
+    $videos = getUserVideosPaginated($user->get('id_user'),$page);
+    $res->add('user',$user->getArr());
+    $res->add('videos',$videos->getArr());
+    return $res;
+}
 /////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -518,11 +705,13 @@ function insertThumbNail($path,$id_video){
         unset($res);
         return;
     }
-    $arr = $stmt->fetch(PDO::FETCH_ASSOC);
-    if( $arr === false ){
-        unset($res);
-    }else{
-        $res->add("id_thumbnail",$arr['id_thumbnail']);
+    else{
+        $arr = $stmt->fetch(PDO::FETCH_ASSOC);
+        if( $arr === false ){
+            unset($res);
+        }else{
+            $res->add("id_thumbnail",$arr['id_thumbnail']);
+        }
     }
     return $res;
 }
@@ -536,12 +725,14 @@ function getThumbnail($id_video){
         unset($res);
         return;
     }
-    $arr = $stmt->fetch(PDO::FETCH_ASSOC);
-    if( $arr === false ){
-        unset($res);
-    }else{
-        $res->add("id_thumbnail",$arr['id_thumbnail']);
-        $res->add("path",$arr['path']);
+    else{
+        $arr = $stmt->fetch(PDO::FETCH_ASSOC);
+        if( $arr === false ){
+            unset($res);
+        }else{
+            $res->add("id_thumbnail",$arr['id_thumbnail']);
+            $res->add("path",$arr['path']);
+        }
     }
     return $res;
 }

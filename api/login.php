@@ -11,7 +11,7 @@
     include_once("YaySon.php");
     session_start();
     $res = new YaySon();
-    if(isset($_SESSION["email"]) or isset($_SESSION["username"])){
+    if(isset($_SESSION["email"]) or isset($_SESSION["name"])){
         $res->add("status",403);
         $res->add("message","You are alredy logged in");
     }
