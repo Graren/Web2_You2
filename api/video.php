@@ -20,7 +20,8 @@
                 if (isset($_GET["id_video"])) {
                     $videoData = getVideoData($_GET["id_video"]);
                     $path = $videoData->get("path");
-                    $str = new Stream($path);
+                    $ext =  pathinfo($path, PATHINFO_EXTENSION);
+                    $str = new Stream($path,$ext);
                     $str->start();
                 }
         }

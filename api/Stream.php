@@ -14,10 +14,12 @@ class Stream
     private $start  = -1;
     private $end    = -1;
     private $size   = 0;
+    private $ext = "";
 
-    function __construct($filePath)
+    function __construct($filePath,$fileExt)
     {
         $this->path = $filePath;
+        $this->ext = $fileExt;
     }
 
     /**
@@ -37,7 +39,7 @@ class Stream
     private function setHeader()
     {
         ob_get_clean();
-        header("Content-Type: video/mp4");
+        header("Content-Type: video/$this->ext");
         header("Cache-Control: max-age=2592000, public");
         header("Expires: ".gmdate('D, d M Y H:i:s', time()+2592000) . ' GMT');
         header("Last-Modified: ".gmdate('D, d M Y H:i:s', @filemtime($this->path)) . ' GMT' );

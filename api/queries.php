@@ -593,7 +593,6 @@ function login($email,$password){
     $stmt = $pdo->query($sql);
     if($stmt === false){
         unset($res);
-        return;
     }
     else{
         $arr = $stmt->fetch(PDO::FETCH_ASSOC);

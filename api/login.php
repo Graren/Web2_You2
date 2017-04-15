@@ -21,7 +21,6 @@
             $_POST["email"] : null;
         $password = isset($_POST["password"])?
             $_POST["password"] : null;
-
         if($email && $password){
             $data = login($email,$password);
             if(isset($data)){
