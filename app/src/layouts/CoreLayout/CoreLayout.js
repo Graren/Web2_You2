@@ -1,12 +1,12 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import Header from '../../containers/Header'
+import HeaderContainer from '../../containers/Header'
 import './CoreLayout.scss'
 import '../../styles/core.scss'
 
 export const CoreLayout = ({ children }) => (
   <div className='container text-center'>
-    <Header user={{ name: 'PAPOS' }} />
+    <HeaderContainer />
     <div className='core-layout__viewport'>
       {children}
     </div>

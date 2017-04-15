@@ -1,14 +1,10 @@
-import axios from '../utils/axios'
+import axios from 'utils/axios'
 import { UserTypes } from '../user'
 
 export const login = (email, password) => (dispatch, getState) => {
-  let params = {
-    email,
-    password
-  }
-  console.log(params)
+  console.log(email)
   dispatch({ type: UserTypes.LOGIN })
-  return axios.post('api/login', { params })
+  return axios.post('api/login.php', { email, password })
     .then(({ data: { data } }) => {
       dispatch({
         type: UserTypes.LOGIN_SUCCESS,
@@ -25,7 +21,7 @@ export const login = (email, password) => (dispatch, getState) => {
 
 export const signout = () => (dispatch, getState) => {
   dispatch({ type: UserTypes.SIGNOUT })
-  return axios.post('api/logout', {})
+  return axios.post('api/logout,php', {})
     .then(() => {
       dispatch({
         type: UserTypes.SIGNOUT_SUCCESS

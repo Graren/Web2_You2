@@ -1,10 +1,9 @@
 import React, { Component, PropTypes } from 'react'
 import { IndexLink } from 'react-router'
-import { LinkContainer } from 'react-router-bootstrap'
+
 import {
   Navbar,
   Nav,
-  NavItem,
   NavDropdown,
   FormGroup,
   Button,
@@ -14,17 +13,16 @@ import {
 import { connect } from 'react-redux'
 
 import './Header.scss'
-import url from '../../utils/url'
-import UserActions from '../../store/user'
-import SocketActions from '../../store/socket'
-// import Header from '../components/'
+import url from 'utils/url'
+import UserActions from 'store/user'
+import Header from './../components/Header'
 
-export class Header extends Component {
+export class HeaderContainer extends Component {
   constructor (props) {
     super(props)
     this.state = {
-    //   email: 'admin@gmail.com',
-    //   password: '12345678',
+      email: 'admin@gmail.com',
+      password: '12345678',
       isAuthDropdownOpen: false
     }
   }
@@ -32,8 +30,6 @@ export class Header extends Component {
   static propTypes = {
     login: PropTypes.func,
     signout: PropTypes.func,
-    connectSocket: PropTypes.func,
-    disconnectSocket: PropTypes.func,
     user: PropTypes.object
   }
 
@@ -41,12 +37,6 @@ export class Header extends Component {
     email: 'admin',
     password: '12345678',
     isAuthDropdownOpen: false
-  }
-
-  componentDidMount () {
-    if (this.props.user) {
-      this.props.connectSocket('ws://localhost:8080/MyBusinessTool/notifications')
-    }
   }
 
   componentWillReceiveProps (nextProps) {
@@ -146,30 +136,11 @@ export class Header extends Component {
     )
   }
 
-  render (){
+  render () {
     const { user } = this.props
 
     return (
-      <Navbar inverse collapseOnSelect>
-        <Navbar.Header>
-          <Navbar.Brand>
-            <IndexLink to={url('/')}>
-              My Business Tool
-            </IndexLink>
-          </Navbar.Brand>
-          <Navbar.Toggle />
-        </Navbar.Header>
-        <Navbar.Collapse>
-          <Nav />
-          <Nav pullRight>
-            {user ? (
-              this.renderUserDropdown()
-            ) : (
-              this.renderAuthDropdown()
-            )}
-          </Nav>
-        </Navbar.Collapse>
-      </Navbar>
+      <Header user={user} renderUserDropdown={this.renderUserDropdown} renderAuthDropdown={this.renderAuthDropdown}/>
     )
   }
 }
@@ -180,9 +151,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   login: (email, password) => dispatch(UserActions.login(email, password)),
-  signout: () => dispatch(UserActions.signout()),
-  connectSocket: (url) => dispatch(SocketActions.wsConnect(url)),
-  disconnectSocket: () => dispatch(SocketActions.wsDisconnect())
+  signout: () => dispatch(UserActions.signout())
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(Header)
+export default connect(mapStateToProps, mapDispatchToProps)(HeaderContainer)
