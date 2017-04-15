@@ -9,28 +9,19 @@
     include_once ("queries.php");
     include_once("Globals.php");
     include_once("YaySon.php");
-
-
-
-    header("Content-Type: application/json");
+    include_once("Stream.php");
     $res = new YaySon();
     session_start();
     if(!isset($_SESSION["email"]) && !isset($_SESSION["name"])){
-        $res->add("status",403);
-        $res->add("message","FUCK MAN LOGIN");
-        echo $res->toJSON();
     }
-    else{
-        switch($_SERVER['REQUEST_METHOD']){
+    else {
+        switch ($_SERVER['REQUEST_METHOD']) {
             case "GET":
-                if(isset($_GET["id_video"])){
+                if (isset($_GET["id_video"])) {
                     $videoData = getVideoData($_GET["id_video"]);
                     $path = $videoData->get("path");
-
+                    $str = new Stream($path);
+                    $str->start();
                 }
-
-                break;
-
         }
     }
-
