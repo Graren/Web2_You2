@@ -2,10 +2,10 @@ import axios from 'utils/axios'
 import { UserTypes } from '../user'
 
 export const login = (email, password) => (dispatch, getState) => {
-  console.log(email)
   dispatch({ type: UserTypes.LOGIN })
   return axios.post('api/login.php', { email, password })
     .then(({ data: { data } }) => {
+      console.log(data);
       dispatch({
         type: UserTypes.LOGIN_SUCCESS,
         user: data

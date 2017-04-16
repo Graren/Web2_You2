@@ -5,8 +5,6 @@
  * Date: 4/13/2017
  * Time: 10:54 PM
  */
-    header("Access-Control-Allow-Origin: *");
-    header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
     header("Content-Type: application/json");
     include_once("connection.php");
     include_once ("queries.php");
