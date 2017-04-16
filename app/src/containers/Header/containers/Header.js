@@ -21,7 +21,7 @@ export class HeaderContainer extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      email: 'admin@gmail.com',
+      email: 'admin1@gmail.com',
       password: '12345678',
       isAuthDropdownOpen: false
     }
@@ -115,11 +115,10 @@ export class HeaderContainer extends Component {
   renderUserDropdown = () => {
     const { isAuthDropdownOpen } = this.state
     const { user } = this.props
-
     return (
       <NavDropdown
         eventKey={3}
-        title={user.name}
+        title={user.username}
         id="user-dropdown"
         open={isAuthDropdownOpen}
         onToggle={this.onAuthDropdownToggle}

@@ -117,7 +117,7 @@
                             $insertResult =insert_video($_POST["id_user"],$_FILES["file"]["name"],$_POST["description"],
                                 $_POST["length"],Globals::getVideoPath() . $savedName,$tags);
 
-                            if(isset($insertResult)){
+                            if($insertResult){
                                 move_uploaded_file($_FILES["file"]["tmp_name"],
                                     Globals::getVideoPath(). $savedName) or die ("FAGGOT");
                                 $data->add("id_video",$insertResult->get('id_video'));

@@ -26,7 +26,7 @@ include_once("YaySon.php");
 
         if($email && $password && $username){
             $data = signUp($email,$password,$username);
-            if(isset($data)){
+            if($data){
                 $_SESSION["name"] = $data->get('username');
                 $_SESSION["email"] = $email;
                 $res->add("status",200);

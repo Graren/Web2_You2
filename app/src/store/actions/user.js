@@ -3,12 +3,14 @@ import { UserTypes } from '../user'
 
 export const login = (email, password) => (dispatch, getState) => {
   dispatch({ type: UserTypes.LOGIN })
-  return axios.post('api/login.php', { email, password })
-    .then(({ data: { data } }) => {
-      console.log(data);
+  let fd = new FormData();
+  fd.append("email",email);
+  fd.append("password",password);
+  return axios.post('api/login.php', fd)
+    .then( ({data : data}) => {
       dispatch({
         type: UserTypes.LOGIN_SUCCESS,
-        user: data
+        user: data.data
       })
     })
     .catch(({ response: { data } }) => {
@@ -21,7 +23,7 @@ export const login = (email, password) => (dispatch, getState) => {
 
 export const signout = () => (dispatch, getState) => {
   dispatch({ type: UserTypes.SIGNOUT })
-  return axios.post('api/logout,php', {})
+  return axios.post('api/logout.php', {})
     .then(() => {
       dispatch({
         type: UserTypes.SIGNOUT_SUCCESS

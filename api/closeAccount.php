@@ -23,11 +23,12 @@
             $_SESSION["email"] : null;
         if($email && $username){
             $data = closeAcount($email);
-            if(isset($data)){
+            if($data){
                 session_destroy();
                 $res->add("status",200);
                 $res->add('message','Account closed, I hope youtube makes you happier than I do :(');
             }else{
+                session_destroy();
                 $res->add("status",500);
                 $res->add("message","Something went wrong");
             }

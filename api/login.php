@@ -23,8 +23,7 @@
             $_POST["password"] : null;
         if($email && $password){
             $data = login($email,$password);
-            if(isset($data)){
-                session_start();
+            if($data){
                 $_SESSION["name"] = $data->get('username');
                 $_SESSION["email"] = $email;
                 $res->add("status",200);

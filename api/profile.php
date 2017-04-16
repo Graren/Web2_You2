@@ -20,7 +20,7 @@
         $username = $_SESSION["name"];
         $page = $_GET['page'];
         $resultJSON = getProfileData($username,$page);
-        if(isset($resultJSON)){
+        if($resultJSON){
             $res->add("data",$resultJSON->getArr());
             $res->add("status",200);
         }

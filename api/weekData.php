@@ -21,7 +21,7 @@
             $id_video = $_POST['id_video'];
             $likes = getLastWeekLikes($id_video);
             $dislikes = getLastWeekDislikes($id_video);
-            if(isset($likes) && isset($dislikes)){
+            if($likes && $dislikes){
                 $tmp = new YaySon();
                 $tmp->add("likes",$likes->get('data'));
                 $tmp->add("dislikes",$dislikes->get('data'));

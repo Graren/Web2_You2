@@ -14,13 +14,13 @@
                         $pdo->quote($length) . "," . 'current_date' . "," . $pdo->quote($path) .") RETURNING id_video,date";
         $stmt = $pdo->query($sql_insert);
         if($stmt === false){
-            unset($res);
+            $res = false;;
 
         }
         else{
             $arr = $stmt->fetch(PDO::FETCH_ASSOC);
             if( $arr === false ){
-                unset($res);
+                $res = false;;
             }else{
                 foreach($tags as $tag){
                     $found = getTagByName($tag);
@@ -56,12 +56,12 @@
                     WHERE video.id_video = $id_video";
         $stmt = $pdo->query($sql);
         if($stmt === false){
-            unset($res);
+            $res = false;;
         }
         else{
             $arr = $stmt->fetch(PDO::FETCH_ASSOC);
             if( $arr === false ){
-                unset($res);
+                $res = false;;
             }else{
                 $res->add("id_video",$arr['id_video']);
                 $res->add("description",$arr['description']);
@@ -100,12 +100,12 @@
         $sql .= "LIMIT $limit OFFSET $offset";
         $stmt = $pdo->query($sql);
         if($stmt === false){
-            unset($res);
+            $res = false;;
         }
         else{
             $arr = $stmt->fetchAll(PDO::FETCH_ASSOC);
             if( $arr === false ){
-                unset($res);
+                $res = false;;
             }else{
                 $tmpArray =array();
                 foreach($arr as $row){
@@ -137,12 +137,12 @@
         $sql .= "LIMIT $limit OFFSET $offset";
         $stmt = $pdo->query($sql);
         if($stmt === false){
-            unset($res);
+            $res = false;;
         }
         else{
             $arr = $stmt->fetchAll(PDO::FETCH_ASSOC);
             if( $arr === false ){
-                unset($res);
+                $res = false;;
             }else{
                 $tmpArray =array();
                 foreach($arr as $row){
@@ -199,12 +199,12 @@ function getAllVideos(){
                     INNER JOIN users ON video.id_user = users.id_user";
     $stmt = $pdo->query($sql);
     if($stmt === false){
-        unset($res);
+        $res = false;;
     }
     else{
         $arr = $stmt->fetchAll(PDO::FETCH_ASSOC);
         if( $arr === false ){
-            unset($res);
+            $res = false;;
         }else{
             $tmpArray =array();
             foreach($arr as $row){
@@ -240,11 +240,11 @@ function getAllVideosPaginated($page){
                     LIMIT $limit OFFSET $offset";
     $stmt = $pdo->query($sql);
     if($stmt === false){
-        unset($res);
+        $res = false;;
     }
     $arr = $stmt->fetchAll(PDO::FETCH_ASSOC);
     if( $arr === false ){
-        unset($res);
+        $res = false;;
     }else{
         $tmpArray =array();
         foreach($arr as $row){
@@ -364,14 +364,14 @@ function getLastWeekLikes($id_video){
 
     $stmt = $pdo->query($sql);
     if($stmt === false){
-        unset($res);
+        $res = false;;
     }
     else{
 
         $arr = $stmt->fetch(PDO::FETCH_ASSOC);
         if( $arr === false ){
             $res->add('finished',false);
-            unset($res);
+            $res = false;;
         }else{
             $dayData =new YaySon();
             for($i = 1; $i < 8; $i++){
@@ -400,14 +400,14 @@ function getLastWeekDislikes($id_video){
 
     $stmt = $pdo->query($sql);
     if($stmt === false){
-        unset($res);
+        $res = false;;
     }
     else{
 
         $arr = $stmt->fetch(PDO::FETCH_ASSOC);
         if( $arr === false ){
             $res->add('finished',false);
-            unset($res);
+            $res = false;;
         }else{
             $dayData =new YaySon();
             for($i = 1; $i < 8; $i++){
@@ -462,13 +462,13 @@ function getLastWeekDislikes($id_video){
                     WHERE video.id_video = $id_video";
     $stmt = $pdo->query($sql);
     if($stmt === false){
-        unset($res);
+        $res = false;;
         return;
     }
     else{
         $arr = $stmt->fetchAll(PDO::FETCH_ASSOC);
         if( $arr === false ){
-            unset($res);
+            $res = false;;
         }else{
             $tmpArray =array();
             foreach($arr as $row){
@@ -500,13 +500,13 @@ function getLastWeekDislikes($id_video){
                         WHERE video.id_video = $id_video";
     $stmt = $pdo->query($sql);
     if($stmt === false){
-        unset($res);
+        $res = false;;
         return;
     }
     else{
         $arr = $stmt->fetchAll(PDO::FETCH_ASSOC);
         if( $arr === false ){
-            unset($res);
+            $res = false;;
         }else{
             $tmpArray =array();
             foreach($arr as $row){
@@ -592,12 +592,12 @@ function login($email,$password){
             WHERE email=" .$pdo->quote($email). "AND password=" . $pdo->quote($password) ." AND is_active =true";
     $stmt = $pdo->query($sql);
     if($stmt === false){
-        unset($res);
+        $res = false;
     }
     else{
         $arr = $stmt->fetch(PDO::FETCH_ASSOC);
         if( $arr === false ){
-            unset($res);
+            $res = false;
         }else{
             $res->add("id_user",$arr['id_user']);
             $res->add("email",$arr['email']);
@@ -619,13 +619,13 @@ function signUp($email,$password,$username){
                     "true".") RETURNING id_user,email,username";
     $stmt = $pdo->query($sql);
     if($stmt === false){
-        unset($res);
+        $res = false;;
         return;
     }
     else{
         $arr = $stmt->fetch(PDO::FETCH_ASSOC);
         if( $arr === false ){
-            unset($res);
+            $res = false;;
         }else{
             $res->add("id_user",$arr['id_user']);
             $res->add("email",$arr['email']);
@@ -643,13 +643,13 @@ function closeAcount($email){
         "AND is_active=true " ."RETURNING id_user";
     $stmt = $pdo->query($sql_insert);
     if($stmt === false){
-        unset($res);
+        $res = false;;
         return;
     }
     else{
         $arr = $stmt->fetch(PDO::FETCH_ASSOC);
         if( $arr === false ){
-            unset($res);
+            $res = false;;
         }else{
             $res->add("id_user",$arr['id_user']);
         }
@@ -665,13 +665,13 @@ function getUserData($username){
             WHERE username=" . $pdo->quote($username) ;
     $stmt = $pdo->query($sql);
     if($stmt === false){
-        unset($res);
+        $res = false;;
         return;
     }
     else{
         $arr = $stmt->fetch(PDO::FETCH_ASSOC);
         if( $arr === false ){
-            unset($res);
+            $res = false;;
         }else{
             $res->add("id_user",$arr['id_user']);
             $res->add("email",$arr['email']);
@@ -701,13 +701,13 @@ function insertThumbNail($path,$id_video){
                     VALUES($id_video," .$pdo->quote($path). ") RETURNING id_thumbnail ";
     $stmt = $pdo->query($sql_insert);
     if($stmt === false){
-        unset($res);
+        $res = false;;
         return;
     }
     else{
         $arr = $stmt->fetch(PDO::FETCH_ASSOC);
         if( $arr === false ){
-            unset($res);
+            $res = false;;
         }else{
             $res->add("id_thumbnail",$arr['id_thumbnail']);
         }
@@ -721,13 +721,13 @@ function getThumbnail($id_video){
     $sql_insert = "SELECT id_thumbnail,path FROM thumbnail WHERE id_video =$id_video";
     $stmt = $pdo->query($sql_insert);
     if($stmt === false){
-        unset($res);
+        $res = false;;
         return;
     }
     else{
         $arr = $stmt->fetch(PDO::FETCH_ASSOC);
         if( $arr === false ){
-            unset($res);
+            $res = false;;
         }else{
             $res->add("id_thumbnail",$arr['id_thumbnail']);
             $res->add("path",$arr['path']);
