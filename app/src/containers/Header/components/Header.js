@@ -8,7 +8,6 @@ import {
 import url from '../../../utils/url'
 
 export const Header = (props) => {
-  console.log(props)
   return (
     <Navbar inverse collapseOnSelect>
       <Navbar.Header>
