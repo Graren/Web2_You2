@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import { IndexLink } from 'react-router'
+import { LinkContainer } from 'react-router-bootstrap'
 
 import {
   Navbar,
@@ -186,6 +187,7 @@ export class HeaderContainer extends Component {
   renderUserDropdown = () => {
     const { isAuthDropdownOpen } = this.state
     const { user } = this.props
+    console.log(this.props);
     return (
       <NavDropdown
         eventKey={3}
@@ -201,6 +203,12 @@ export class HeaderContainer extends Component {
           >
             Sign Out
           </Button>
+          <LinkContainer to={url(`/profile/${user.id_user}`)}>
+          <Button className="logout-btn">
+            Profile
+          </Button>
+        </LinkContainer>
+
         </div>
       </NavDropdown>
     )

@@ -1,5 +1,5 @@
 import axios from 'utils/axios'
-import { UserTypes } from '../user'
+import { UserTypes } from '../video'
 
 export const login = (email, password) => (dispatch, getState) => {
   dispatch({ type: UserTypes.LOGIN })
@@ -77,22 +77,4 @@ export const deleteUser = (user) => (dispatch, getState) => {
     })
 }
 
-export const getProfile = (page) => (dispatch, getState) => {
-  dispatch({ type: UserTypes.DELETE })
-  const fd = new FormData();
-  fd.append("page", page);
-  return axios.post('api/profile.php',page)
-    .then(() => {
-      dispatch({
-        type: UserTypes.GET_PROFILE_SUCCESS
-      })
-    })
-    .catch(error => {
-      dispatch({
-        type: UserTypes.GET_PROFILE_ERROR,
-        error
-      })
-    })
-}
-
-//missing update user
+//missing update

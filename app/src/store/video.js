@@ -1,5 +1,5 @@
 import { createReducer, createActions } from 'reduxsauce'
-import * as actions from './actions/user'
+import * as actions from './actions/video'
 
 /* ------------- Types and Action Creators ------------- */
 
@@ -15,10 +15,7 @@ const { Types, Creators } = createActions({
   signupError: ['error'],
   deleteUser: actions.deleteUser,
   deleteSuccess: ['user'],
-  deleteError: ['error'],
-  getProfile: actions.getProfile,
-  getProfileSuccess: ['profile'],
-  getProfileError: ['error']
+  deleteError: ['error']
 })
 
 export const UserTypes = Types
@@ -40,13 +37,6 @@ export const request = (state) => Object.assign({}, state, {
 })
 
 export const loginSuccess = (state, { user }) => Object.assign({}, state, {
-  user,
-  fetching: false,
-  error: null
-})
-
-//I AM NOT SURE WHAT THE FUCK DOES THE API RETURN SO BEWARE
-export const getProfileSuccess = (state, { user }) => Object.assign({}, state, {
   user,
   fetching: false,
   error: null
@@ -77,10 +67,7 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.SIGNUP]: request,
   [Types.SIGNUP_SUCCESS]: loginSuccess,
   [Types.SIGNUP_ERROR]: error,
-  [Types.DELETE_USER]: request,
+  [Types.DELETE]: request,
   [Types.DELETE_SUCCESS]: deleteSuccess,
-  [Types.DELETE_ERROR]: error,
-  [Types.GET_PROFILE_USER]: request,
-  [Types.GET_PROFILE_SUCCESS]: getProfileSuccess,
-  [Types.GET_PROFILE_ERROR]: error
+  [Types.DELETE_ERROR]: error
 })
