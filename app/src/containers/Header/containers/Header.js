@@ -23,6 +23,7 @@ export class HeaderContainer extends Component {
     this.state = {
       email: 'admin1@gmail.com',
       password: '12345678',
+      username: 'admin',
       isAuthDropdownOpen: false
     }
   }
@@ -42,7 +43,8 @@ export class HeaderContainer extends Component {
   componentWillReceiveProps (nextProps) {
     if (nextProps.user !== this.props.user) {
       this.setState({
-        isAuthDropdownOpen: false
+        isAuthDropdownOpen: false,
+        isSignupDropdownOpen: false,
       })
     }
   }
@@ -55,9 +57,23 @@ export class HeaderContainer extends Component {
     }
   }
 
+  onSignupDropdownToggle = (isOpen, e) => {
+    if (e.target.tagName !== 'REACT') {
+      this.setState({
+        isSignupDropdownOpen: isOpen
+      })
+    }
+  }
+
   onEmailChange = e => {
     this.setState({
       email: e.target.value
+    })
+  }
+
+  onUsernameChange = e => {
+    this.setState({
+      username: e.target.value
     })
   }
 
@@ -112,6 +128,61 @@ export class HeaderContainer extends Component {
     )
   }
 
+  renderSignupDropdown = () => {
+    const { isSignupDropdownOpen, email, password, username } = this.state
+
+    return (
+      <NavDropdown
+        eventKey={3}
+        title="Sign Up"
+        id="auth-dropdown"
+        open={isSignupDropdownOpen}
+        onToggle={this.onSignupDropdownToggle}
+      >
+        <Navbar.Form>
+          <FormGroup controlId="formHorizontalEmail">
+            <ControlLabel>Username</ControlLabel>
+            <FormControl
+              type="text"
+              placeholder="Username"
+              onChange={this.onUsernameChange}
+              value={username}
+            />
+          </FormGroup>
+
+          <FormGroup controlId="formHorizontalEmail">
+            <ControlLabel>Email</ControlLabel>
+            <FormControl
+              type="email"
+              placeholder="Email"
+              onChange={this.onEmailChange}
+              value={email}
+            />
+          </FormGroup>
+
+          <FormGroup controlId="formHorizontalPassword">
+            <ControlLabel>Password</ControlLabel>
+            <FormControl
+              type="password"
+              placeholder="Password"
+              onChange={this.onPasswordChange}
+              value={password}
+            />
+          </FormGroup>
+
+          <FormGroup className="login-btn">
+            <Button
+              type="submit"
+              onClick={() => this.props.signup({ email, password, username })}
+            >
+              Sign Up
+            </Button>
+          </FormGroup>
+        </Navbar.Form>
+      </NavDropdown>
+    )
+  }
+
   renderUserDropdown = () => {
     const { isAuthDropdownOpen } = this.state
     const { user } = this.props
@@ -139,7 +210,12 @@ export class HeaderContainer extends Component {
     const { user } = this.props
 
     return (
-      <Header user={user} renderUserDropdown={this.renderUserDropdown} renderAuthDropdown={this.renderAuthDropdown}/>
+      <Header
+        user={user}
+        renderUserDropdown={this.renderUserDropdown}
+        renderSignupDropdown={this.renderSignupDropdown}
+        renderAuthDropdown={this.renderAuthDropdown}
+      />
     )
   }
 }
@@ -150,6 +226,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   login: (email, password) => dispatch(UserActions.login(email, password)),
+  signup: (user) => dispatch(UserActions.signup(user)),
   signout: () => dispatch(UserActions.signout())
 })
 

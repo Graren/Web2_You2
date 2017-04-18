@@ -3,20 +3,42 @@ import { UserTypes } from '../user'
 
 export const login = (email, password) => (dispatch, getState) => {
   dispatch({ type: UserTypes.LOGIN })
-  let fd = new FormData();
-  fd.append("email",email);
-  fd.append("password",password);
+  const fd = new FormData();
+  fd.append("email", email);
+  fd.append("password", password);
   return axios.post('api/login.php', fd)
     .then( ({data : data}) => {
+      console.log(data);
       dispatch({
         type: UserTypes.LOGIN_SUCCESS,
         user: data.data
       })
     })
-    .catch(({ response: { data } }) => {
+    .catch(error => {
       dispatch({
         type: UserTypes.LOGIN_ERROR,
-        error: data
+        error
+      })
+    })
+}
+
+export const signup = (user) => (dispatch, getState) => {
+  dispatch({ type: UserTypes.SIGNUP })
+  const fd = new FormData();
+  fd.append("username", user.username);
+  fd.append("email", user.email);
+  fd.append("password", user.password);
+  return axios.post('api/signup.php', fd)
+    .then(({data : data}) => {
+      dispatch({
+        type: UserTypes.SIGNUP_SUCCESS,
+        user: data.data
+      })
+    })
+    .catch(error => {
+      dispatch({
+        type: UserTypes.SIGNUP_ERROR,
+        error
       })
     })
 }
@@ -29,10 +51,10 @@ export const signout = () => (dispatch, getState) => {
         type: UserTypes.SIGNOUT_SUCCESS
       })
     })
-    .catch(({ response: { data } }) => {
+    .catch(error => {
       dispatch({
         type: UserTypes.SIGNOUT_ERROR,
-        error: data
+        error
       })
     })
 }

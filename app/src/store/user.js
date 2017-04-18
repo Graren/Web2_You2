@@ -9,7 +9,10 @@ const { Types, Creators } = createActions({
   loginError: ['error'],
   signout: actions.signout,
   signoutSuccess: [],
-  signoutError: ['error']
+  signoutError: ['error'],
+  signup: actions.signup,
+  signupSuccess: ['user'],
+  signupError: ['error']
 })
 
 export const UserTypes = Types
@@ -51,5 +54,8 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.LOGIN_ERROR]: error,
   [Types.SIGNOUT]: request,
   [Types.SIGNOUT_SUCCESS]: signoutSuccess,
-  [Types.SIGNOUT_ERROR]: error
+  [Types.SIGNOUT_ERROR]: error,
+  [Types.SIGNUP]: request,
+  [Types.SIGNUP_SUCCESS]: loginSuccess,
+  [Types.SIGNUP_ERROR]: error
 })

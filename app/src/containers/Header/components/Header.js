@@ -20,13 +20,16 @@ export const Header = (props) => {
       </Navbar.Header>
       <Navbar.Collapse>
         <Nav />
-        <Nav pullRight>
           {props.user ? (
-            props.renderUserDropdown()
+            <Nav pullRight>
+              {props.renderUserDropdown()}
+            </Nav>
           ) : (
-            props.renderAuthDropdown()
+            <Nav pullRight>
+              {props.renderAuthDropdown()}
+              {props.renderSignupDropdown()}
+            </Nav>
           )}
-        </Nav>
       </Navbar.Collapse>
     </Navbar>
   )
@@ -34,6 +37,7 @@ export const Header = (props) => {
 
 Header.propTypes = {
   renderUserDropdown : PropTypes.func,
+  renderSignupDropdown : PropTypes.func,
   renderAuthDropdown : PropTypes.func,
   user : PropTypes.Object
 }
