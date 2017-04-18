@@ -4,7 +4,7 @@
 {
     private static $_DB;
     public  static function getVideoPath() {
-        return 'C:\xampp\htdocs\Web2_You2\static\\';
+        return __DIR__ . '/../static/';
     }
 
     public static function getProjectRoute(){
