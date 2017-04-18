@@ -92,7 +92,7 @@
                     $allowedExts = array("mp4","ogg","webm");
                     $extension = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
                     $data = new YaySon();
-                    $data->add('id_user',$_POST["id_user"]);
+                    $data->add('id_user',$_SESSION['id_user']);
                     $data->add('description',$_POST["description"]);
                     $data->add('length',$_POST["length"]);
                     $data->add('name',$_FILES["file"]["name"]);
@@ -114,7 +114,7 @@
                                 mkdir(Globals::getProjectRoute(). "../../static");
                             }
                             $tags = explode(",",$_POST["tags"]);
-                            $insertResult =insert_video($_POST["id_user"],$_FILES["file"]["name"],$_POST["description"],
+                            $insertResult =insert_video($_SESSION['id_user'],$_FILES["file"]["name"],$_POST["description"],
                                 $_POST["length"],Globals::getVideoPath() . $savedName,$tags);
 
                             if($insertResult){

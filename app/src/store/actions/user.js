@@ -1,5 +1,6 @@
 import axios from 'utils/axios'
 import { UserTypes } from '../user'
+import { stringify as qs} from 'qs'
 
 export const login = (email, password) => (dispatch, getState) => {
   dispatch({ type: UserTypes.LOGIN })
@@ -78,13 +79,13 @@ export const deleteUser = (user) => (dispatch, getState) => {
 }
 
 export const getProfile = (page) => (dispatch, getState) => {
-  dispatch({ type: UserTypes.DELETE })
-  const fd = new FormData();
-  fd.append("page", page);
-  return axios.post('api/profile.php',page)
-    .then(() => {
+  dispatch({ type: UserTypes.GET_PROFILE })
+  return axios.get('api/profile.php', { params: { page } })
+    .then(({ data }) => {
+      console.log(data)
       dispatch({
-        type: UserTypes.GET_PROFILE_SUCCESS
+        type: UserTypes.GET_PROFILE_SUCCESS,
+        profile : data
       })
     })
     .catch(error => {
@@ -95,4 +96,24 @@ export const getProfile = (page) => (dispatch, getState) => {
     })
 }
 
+export const editUser = (user) => (dispatch, getState) => {
+  dispatch({ type: UserTypes.EDIT_USER })
+  const fd = new FormData()
+  fd.append("email", user.email)
+  fd.append("password", user.password)
+  fd.append("username", user.username)
+  return axios.post('api/userEdit.php', fd)
+    .then((user) => {
+      dispatch({
+        type: UserTypes.EDIT_SUCCESS,
+        user
+      })
+    })
+    .catch(error => {
+      dispatch({
+        type: UserTypes.EDIT_ERROR,
+        error
+      })
+    })
+}
 //missing update user

@@ -29,6 +29,7 @@ include_once("YaySon.php");
             if($data){
                 $_SESSION["name"] = $data->get('username');
                 $_SESSION["email"] = $email;
+                $_SESSION["id_user"] = $data->get("id_user");
                 $res->add("status",200);
                 $res->add('message','User created!');
                 $res->add("data",$data->getArr());

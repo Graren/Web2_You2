@@ -18,7 +18,10 @@ const { Types, Creators } = createActions({
   deleteError: ['error'],
   getProfile: actions.getProfile,
   getProfileSuccess: ['profile'],
-  getProfileError: ['error']
+  getProfileError: ['error'],
+  editUser: actions.editUser,
+  editUserSuccess: ['user'],
+  editUserError: ['error']
 })
 
 export const UserTypes = Types
@@ -82,5 +85,8 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.DELETE_ERROR]: error,
   [Types.GET_PROFILE]: request,
   [Types.GET_PROFILE_SUCCESS]: getProfileSuccess,
-  [Types.GET_PROFILE_ERROR]: error
+  [Types.GET_PROFILE_ERROR]: error,
+  [Types.EDIT_USER]: request,
+  [Types.EDIT_USER_SUCCESS]: loginSuccess,
+  [Types.EDIT_USER_ERROR]: error
 })

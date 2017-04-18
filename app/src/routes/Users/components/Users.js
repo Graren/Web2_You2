@@ -3,8 +3,9 @@ import { Row, Col, Jumbotron } from 'react-bootstrap'
 import { browserHistory } from 'react-router'
 import axios from 'utils/axios'
 import UsersData from './UserData/UserData'
+import UserVideos from './UserVideos/UserVideos'
 
-export class  UserContainer  extends Component{
+export class  Users  extends Component{
   constructor(props) {
     super(props)
     this.state = {
@@ -14,14 +15,16 @@ export class  UserContainer  extends Component{
   }
   static propTypes = {
     user : PropTypes.object,
-    videos : PropTypes.array
+    videos : PropTypes.array,
+    getProfile : PropTypes.func,
+    deleteUser: PropTypes.func
   }
 
   componentDidMount() {
     if (!this.props.user) {
       browserHistory.push('/')
     } else {
-      console.log("nothing implemented");
+      this.props.getProfile(1)
     }
   }
 
@@ -31,18 +34,10 @@ export class  UserContainer  extends Component{
     return (
       <div>
         <UsersData user={user}/>
-        <div className="videoContainer">
-          {
-              // (videos.map(video => {
-              //   <Col md={4} sm={6} className="col-project-card">
-              //         <VideoCard {...video} />
-              //       </Col>
-              // }))
-          }
-        </div>
+        <UserVideos />
       </div>
     )
   }
 }
 
-export default UserContainer
+export default Users

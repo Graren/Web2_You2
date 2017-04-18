@@ -1,9 +1,11 @@
-import React from 'react'
+import React, { PropTypes } from 'react'
 import './UserData.scss'
 import {
   Row,
   Col,
-  Grid
+  Grid,
+  Button,
+  ButtonGroup
 } from 'react-bootstrap'
 
 const UserData = (props) => {
@@ -15,8 +17,11 @@ const UserData = (props) => {
             <Col sm={6}>
               <h1>{props.user.username}</h1>
             </Col>
-            <Col sm={6}>
-
+            <Col sm={6} style={{textAlign:'center'}}>
+              <ButtonGroup>
+                <Button className="edit-btn" bsStyle="info" onClick={props.onEdit}>Edit</Button>
+                <Button className="delete-btn" bsStyle="danger" onClick={props.onDelete}>Delete</Button>
+            </ButtonGroup>
             </Col>
           </Row>
 
@@ -31,6 +36,17 @@ const UserData = (props) => {
       </div>
     </div>
   )
+}
+
+UserData.propTypes = {
+  onDelete : PropTypes.func,
+  onEdit : PropTypes.func,
+  user : PropTypes.Object
+}
+
+UserData.defaultProps = {
+  onDelete: () => {console.log("Deleted")},
+  onEdit:  () => {console.log("Edit")}
 }
 
 export default UserData
