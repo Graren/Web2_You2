@@ -17,7 +17,7 @@
         $res->add("message","Forbidden");
     }
     else{
-        $username = $_SESSION["name"];
+        $username = $_GET["username"];
         $page = $_GET['page'];
         $resultJSON = getProfileData($username,$page);
         if($resultJSON){
