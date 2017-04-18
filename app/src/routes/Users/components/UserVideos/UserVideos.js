@@ -23,8 +23,8 @@ UserVideos.propTypes = {
 
 UserVideos.defaultProps = {
   videos: [
-    "CUlos",
-    "papos"
+    "Crap",
+    "Data"
   ]
 }
 
