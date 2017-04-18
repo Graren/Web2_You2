@@ -3,25 +3,31 @@ import './UserData.scss'
 import {
   Row,
   Col,
+  Grid
 } from 'react-bootstrap'
 
 const UserData = (props) => {
   return (
     <div className="userData">
       <div className="container">
-        <Row>
-          <Col sm={6}>
-            <h1>{props.user.username}</h1>
-          </Col>
-        </Row>
-        <Row>
+        <Grid>
+          <Row className="show-grid">
             <Col sm={6}>
-              <p>id :{props.user.id_user}</p>
+              <h1>{props.user.username}</h1>
             </Col>
             <Col sm={6}>
-              <p>email :{props.user.email}</p>
+
             </Col>
-        </Row>
+          </Row>
+
+          <Row className="show-grid">
+              <Col sm={6}>
+              </Col>
+              <Col sm={6} >
+                <p>email :{props.user.email}</p>
+              </Col>
+          </Row>
+        </Grid>
       </div>
     </div>
   )

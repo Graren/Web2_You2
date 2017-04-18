@@ -14,7 +14,7 @@ const { Types, Creators } = createActions({
   signupSuccess: ['user'],
   signupError: ['error'],
   deleteUser: actions.deleteUser,
-  deleteSuccess: ['user'],
+  deleteSuccess: [],
   deleteError: ['error'],
   getProfile: actions.getProfile,
   getProfileSuccess: ['profile'],
@@ -46,8 +46,8 @@ export const loginSuccess = (state, { user }) => Object.assign({}, state, {
 })
 
 //I AM NOT SURE WHAT THE FUCK DOES THE API RETURN SO BEWARE
-export const getProfileSuccess = (state, { user }) => Object.assign({}, state, {
-  user,
+export const getProfileSuccess = (state, { profile }) => Object.assign({}, state, {
+  profile,
   fetching: false,
   error: null
 })
@@ -80,7 +80,7 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.DELETE_USER]: request,
   [Types.DELETE_SUCCESS]: deleteSuccess,
   [Types.DELETE_ERROR]: error,
-  [Types.GET_PROFILE_USER]: request,
+  [Types.GET_PROFILE]: request,
   [Types.GET_PROFILE_SUCCESS]: getProfileSuccess,
   [Types.GET_PROFILE_ERROR]: error
 })

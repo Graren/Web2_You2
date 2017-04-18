@@ -1,12 +1,18 @@
 .userData {
   margin-left: 1em;
   margin-right: 1em;
-  background-color: rgb(184, 186, 194);
+  background-color: rgb(0, 0, 0);
+  color: rgb(255, 255, 255);
   margin-bottom: 1em;
   h1 {
-    font-size: 3em;
+    font-size: 4em;
+    text-align: center;
+    text-shadow: 3px 3px 3px white;
+
   }
   p{
     font-size: 2em;
+    text-align: center;
+    text-shadow: 3px 3px 3px white; 
   }
 }

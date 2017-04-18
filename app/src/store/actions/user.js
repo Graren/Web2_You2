@@ -60,7 +60,7 @@ export const signout = () => (dispatch, getState) => {
 }
 
 export const deleteUser = (user) => (dispatch, getState) => {
-  dispatch({ type: UserTypes.DELETE })
+  dispatch({ type: UserTypes.DELETE_USER })
   const fd = new FormData();
   fd.append("email", user.email);
   return axios.post('api/closeAccount.php',fd )
