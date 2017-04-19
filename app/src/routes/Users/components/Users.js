@@ -2,7 +2,9 @@ import React, { Component, PropTypes } from 'react'
 import { Row, Col, Jumbotron } from 'react-bootstrap'
 import { browserHistory } from 'react-router'
 import axios from 'utils/axios'
+import url from 'utils/url'
 import UsersData from './UserData/UserData'
+import VideoCard from 'components/VideoCard'
 import UserVideos from './UserVideos/UserVideos'
 
 export class  Users  extends Component{
@@ -30,10 +32,17 @@ export class  Users  extends Component{
 
   render() {
     const { user } = this.props
-    const { videos } = this.props || []
+    const { videos } = this.props
     return (
-      <div>
+      <div className="container">
         <UsersData user={user}/>
+        {videos.map(video => (
+          <VideoCard
+            title={video.name}
+            description={video.description}
+            id_video={video.id_video}
+          />
+        ))}
         <UserVideos />
       </div>
     )

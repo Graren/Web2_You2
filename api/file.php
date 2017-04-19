@@ -123,9 +123,9 @@
                                 $data->add("id_video",$insertResult->get('id_video'));
                                 $data->add("date",$insertResult->get('date'));
                                 try{
-                                    $thumbPath = Globals::getVideoPath(). "thumbs\\". getName(Globals::getVideoPath(). $savedName) .".jpg";
-                                    $str = shell_exec("ffmpeg -i " .Globals::getVideoPath(). $savedName." -vframes 1 -an -s 320x200 -ss 10  "
-                                        . $thumbPath);
+                                    $thumbPath = Globals::getVideoPath(). "thumbs/". getName(Globals::getVideoPath(). $savedName) .".jpg";
+                                    $cmd = "ffmpeg -i " .Globals::getVideoPath(). $savedName." -vframes 1 -an -s 320x200 -ss 10  " . $thumbPath;
+                                    shell_exec($cmd);
                                     $data->add("id_thumbnail",insertThumbNail($thumbPath,$data->get('id_video'))->get('id_thumbnail'));
 
                                 } catch (Exception $e){

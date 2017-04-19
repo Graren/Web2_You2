@@ -4668,7 +4668,7 @@ promise@^7.1.1:
   dependencies:
     asap "~2.0.3"
 
-prop-types@^15.5.6:
+prop-types@^15.5.0, prop-types@^15.5.6:
   version "15.5.8"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.5.8.tgz#6b7b2e141083be38c8595aa51fc55775c7199394"
   dependencies:
@@ -4783,6 +4783,12 @@ rc@^1.0.1, rc@~1.1.6:
 react-addons-test-utils@^15.0.0:
   version "15.4.1"
   resolved "https://registry.yarnpkg.com/react-addons-test-utils/-/react-addons-test-utils-15.4.1.tgz#1e4caab151bf27cce26df5f9cb714f4fd8359ae1"
+
+react-aspect-ratio@^1.0.6:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/react-aspect-ratio/-/react-aspect-ratio-1.0.6.tgz#d316317567935feb27fceaa3426d301ed4681851"
+  dependencies:
+    prop-types "^15.5.0"
 
 react-base16-styling@^0.5.1:
   version "0.5.3"

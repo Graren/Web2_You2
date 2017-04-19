@@ -85,7 +85,7 @@ export const getProfile = (page) => (dispatch, getState) => {
       console.log(data)
       dispatch({
         type: UserTypes.GET_PROFILE_SUCCESS,
-        profile : data
+        profile : data.data
       })
     })
     .catch(error => {
