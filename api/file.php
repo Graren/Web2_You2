@@ -95,6 +95,7 @@
                     $data->add('id_user',$_SESSION['id_user']);
                     $data->add('description',$_POST["description"]);
                     $data->add('name',$_FILES["file"]["name"]);
+                    $data->add('uploader',$_SESSION['name']);
                     if ( ( ($_FILES["file"]["type"] == "video/mp4")
                         || ($_FILES["file"]["type"] == "video/ogg")
                         || ($_FILES["file"]["type"] == "video/webm")
