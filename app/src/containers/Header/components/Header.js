@@ -1,11 +1,13 @@
 import React, { PropTypes } from 'react'
 import { IndexLink } from 'react-router'
+import { LinkContainer } from 'react-router-bootstrap'
 import './Header.scss'
 import {
   Navbar,
   Nav,
   FormControl,
-  Button
+  Button,
+  NavItem
 } from 'react-bootstrap'
 import url from '../../../utils/url'
 
@@ -27,6 +29,9 @@ export const Header = (props) => {
         <Nav />
           {props.user ? (
             <Nav pullRight>
+              <LinkContainer to={url('/upload')}>
+                <NavItem>Upload</NavItem>
+              </LinkContainer>
               {props.renderUserDropdown()}
             </Nav>
           ) : (
