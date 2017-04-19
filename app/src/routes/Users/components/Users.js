@@ -1,14 +1,11 @@
 import React, { Component, PropTypes } from 'react'
-import { Row, Col, Jumbotron } from 'react-bootstrap'
 import { browserHistory } from 'react-router'
-import axios from 'utils/axios'
-import url from 'utils/url'
 import UsersData from './UserData/UserData'
 import VideoCard from 'components/VideoCard'
-import UserVideos from './UserVideos/UserVideos'
+import { Pager } from 'react-bootstrap'
 
-export class  Users  extends Component{
-  constructor(props) {
+export class Users extends Component{
+  constructor (props) {
     super(props)
     this.state = {
       user : {},
@@ -20,20 +17,26 @@ export class  Users  extends Component{
     user : PropTypes.object,
     videos : PropTypes.array,
     getProfile : PropTypes.func,
-    deleteUser: PropTypes.func
+    deleteUser: PropTypes.func,
+    prev : PropTypes.bool,
+    next : PropTypes.bool
   }
 
-  componentDidMount(){
+  componentDidMount (){
     if (!this.props.user) {
       browserHistory.push('/')
     } else {
-      this.props.getProfile(3, this.props.user.username)
+      this.props.getProfile(1, this.props.user.username)
     }
   }
 
-  render() {
+  render (){
     const { user } = this.props
     const { videos } = this.props
+    const { prev } = this.props
+    const { next } = this.props
+    console.log(this.props)
+
     return (
       <div className="container">
         <UsersData user={user}/>
@@ -44,7 +47,23 @@ export class  Users  extends Component{
             id_video={video.id_video}
           />
         ))}
+        <Pager>
+          {
+            prev && <Pager.Item onClick={e => {
+              e.preventDefault()
+              this.props.getProfile(prev, user.username)
+            }} >Previous</Pager.Item>
+          }
+          {
+            next && <Pager.Item onClick={e => {
+              e.preventDefault()
+              this.props.getProfile(next, user.username)
+            }} >Next</Pager.Item>
+          }
+        </Pager>
+
       </div>
+
     )
   }
 }

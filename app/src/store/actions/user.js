@@ -82,7 +82,6 @@ export const getProfile = (page, username) => (dispatch, getState) => {
   dispatch({ type: UserTypes.GET_PROFILE })
   return axios.get('api/profile.php', { params: { page, username } })
     .then(({ data }) => {
-      console.log(data)
       dispatch({
         type: UserTypes.GET_PROFILE_SUCCESS,
         profile : data.data

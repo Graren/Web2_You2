@@ -11,7 +11,7 @@ const VideoCard = (props) => {
     <Card>
       <Row>
         <Col xs={4} md={2}>
-          <Link to={url(`video/${props.id_video}`)}>
+          <Link to={url(`/video/${props.id_video}`)}>
             <AspectRatio
               ratio="1"
               style={{
@@ -23,7 +23,7 @@ const VideoCard = (props) => {
           </Link>
         </Col>
         <Col xs={8} md={10}>
-          <Link to={url(`video/${props.id_video}`)}>
+          <Link to={url(`/video/${props.id_video}`)}>
             <h2 style={{ marginTop: 0 }}>{props.title}</h2>
           </Link>
           <p>{props.description}</p>

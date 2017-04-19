@@ -21,7 +21,9 @@ const mapDispatchToProps = (dispatch) => ({
 const mapStateToProps = (state) => ({
   user : state.user.user,
   // userProfile :state.profile.user,
-  videos : (state.user.profile && state.user.profile.videos && state.user.profile.videos.videos) ? state.user.profile.videos.videos : []
+  videos : (state.user.profile && state.user.profile.videos) ? state.user.profile.videos : [],
+  prev : (state.user.profile && state.user.profile.prevPage) ? state.user.profile.prevPage : false,
+  next : (state.user.profile && state.user.profile.nextPage) ? state.user.profile.nextPage : false
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Users)
