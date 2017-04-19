@@ -95,8 +95,10 @@
                     $data = new YaySon();
                     $data->add('id_user',$_SESSION['id_user']);
                     $data->add('description',$_POST["description"]);
+                    $length = (int) shell_exec("ffmpeg -i ". $_FILES["file"]["tmp_name"] . " 2>&1 | grep \"Duration\"| cut -d ' ' -f 4 | sed s/,// | sed 's@\..*@@g' | awk '{ split($1, A, \":\"); split(A[3], B, \".\"); print 3600*A[1] + 60*A[2] + B[1] }'");
+                    $data->add('length', $length);
                     $data->add('name',$_FILES["file"]["name"]);
-                    $data->add('uploader',$_SESSION['name']);
+                    $data->add('uploader',$_SESSION['name']); 
                     if ( ( ($_FILES["file"]["type"] == "video/mp4")
                         || ($_FILES["file"]["type"] == "video/ogg")
                         || ($_FILES["file"]["type"] == "video/webm")
@@ -114,9 +116,7 @@
                                 mkdir(Globals::getProjectRoute(). "../../static");
                             }
                             $tags = explode(",",$_POST["tags"]);
-                            $length = '00:01';
-                            $insertResult =insert_video($_SESSION['id_user'],$_FILES["file"]["name"],$_POST["description"],
-                                $length,Globals::getVideoPath() . $savedName,$tags);
+                            $insertResult = insert_video($_SESSION['id_user'],$_FILES["file"]["name"],$_POST["description"], $length, Globals::getVideoPath() . $savedName,$tags);
 
                             if($insertResult){
                                 move_uploaded_file($_FILES["file"]["tmp_name"],
@@ -131,7 +131,6 @@
 
                                 } catch (Exception $e){
                                     echo $e->getTrace();
-
                                 }
 
                                 $res->add("status",200);

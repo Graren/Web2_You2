@@ -11,7 +11,7 @@
         $sql_insert = "INSERT INTO video(id_user,name,description,length,date,path)
                        VALUES
                        (" . $id_user . ",". $pdo->quote($name) . "," .$pdo->quote($description) . "," .
-                        $pdo->quote($length) . "," . 'current_date' . "," . $pdo->quote($path) .") RETURNING id_video,date";
+                        $length . "," . 'current_date' . "," . $pdo->quote($path) .") RETURNING id_video,date";
         $stmt = $pdo->query($sql_insert);
         if($stmt === false){
             $res = false;;

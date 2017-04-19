@@ -59,7 +59,7 @@ export class Search extends Component {
               title={this.state.video.name}
               description={this.state.video.description}
               id_video={this.state.video.id_video}
-              username="admin1"
+              username={this.state.video.uploader}
             />
             <Button onClick={() => this.setState({ video: null })}>Upload a new one</Button>
           </Jumbotron>
