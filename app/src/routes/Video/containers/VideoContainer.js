@@ -14,7 +14,8 @@ import VideoActions from 'store/video'
 const mapDispatchToProps = (dispatch) => ({
   //eslint-disable-next-line
   getVideo: (id_video) => dispatch(VideoActions.getVideo(id_video)),
-  getVideoReport: (id_video) => dispatch(VideoActions.getVideoReport(id_video))
+  getVideoReport: (id_video) => dispatch(VideoActions.getVideoReport(id_video)),
+  addComment: (id_video, comment) => dispatch(VideoActions.addComment(id_video, comment))
   // deleteUser: () => dispatch(UserActions.deleteUser())
   // editUser: (user) => dispatch(UserActions.editUser(user)),
 })

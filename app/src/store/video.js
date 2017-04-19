@@ -9,7 +9,10 @@ const { Types, Creators } = createActions({
   getVideoError: ['error'],
   getVideoReport: actions.getVideoReport,
   getVideoReportSuccess : ['report'],
-  getVideoReportError : ['error']
+  getVideoReportError : ['error'],
+  addComment: actions.addComment,
+  addCommentSuccess: ['comment'],
+  addCommentError: ['error']
 })
 
 export const VideoTypes = Types
@@ -37,6 +40,12 @@ export const getVideoSuccess = (state, { video }) => Object.assign({}, state, {
   error: null
 })
 
+export const addCommentSuccess = (state, { comment }) => Object.assign({}, state, {
+  video: Object.assign({}, state.video, { comments: state.video.comments.concat(comment) }),
+  fetching: false,
+  error: null
+})
+
 export const getVideoReportSuccess = (state, { report }) => Object.assign({}, state, {
   report,
   fetching: false,
@@ -56,5 +65,7 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.GET_VIDEO_ERROR]: error,
   [Types.GET_VIDEO_REPORT]: request,
   [Types.GET_VIDEO_REPORT_SUCCESS]: getVideoReportSuccess,
-  [Types.GET_VIDEO_REPORT_ERROR]: error
+  [Types.ADD_COMMENT]: request,
+  [Types.ADD_COMMENT_SUCCESS]: addCommentSuccess,
+  [Types.ADD_COMMENT_ERROR]: error
 })

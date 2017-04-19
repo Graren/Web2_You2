@@ -48,7 +48,7 @@ export default (initialState = {}) => {
     })
   }
 
-  persistStore(store);
+  persistStore(store)
 
   return store
 }

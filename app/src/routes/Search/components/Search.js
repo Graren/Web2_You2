@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import { Row, Col, Jumbotron, Pager, FormControl, Button, Radio } from 'react-bootstrap'
 import { LinkContainer } from 'react-router-bootstrap'
+import { browserHistory } from 'react-router'
 import axios from 'utils/axios'
 import url from 'utils/url'
 import VideoCard from 'components/VideoCard'
@@ -24,7 +25,11 @@ export class Search extends Component {
   }
 
   componentDidMount() {
-    this.searchVideos()
+    if (!this.props.user) {
+      browserHistory.push('/')
+    } else {
+      this.searchVideos()
+    }
   }
 
   componentDidUpdate(prevProps) {

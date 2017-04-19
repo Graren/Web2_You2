@@ -517,7 +517,7 @@ function getLastWeekDislikes($id_video){
                 $res->add("id_video",$arr['id_video']);
                 $res->add("id_user",$arr['id_user']);
                 $res->add("id_comment",$arr['id_comment']);
-                $res->add("message",$arr['message']);
+                $res->add("comment",$arr['message']);
                 $res->add("created",true);
             }
         }
