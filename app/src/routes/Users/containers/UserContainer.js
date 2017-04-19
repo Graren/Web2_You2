@@ -14,13 +14,13 @@ import UserActions from 'store/user'
 const mapDispatchToProps = (dispatch) => ({
   //eslint-disable-next-line
   getProfile: (page,username) => dispatch(UserActions.getProfile(page,username)),
-  deleteUser: (user) => dispatch(UserActions.deleteUser(user))
+  deleteUser: () => dispatch(UserActions.deleteUser())
   // editUser: (user) => dispatch(UserActions.editUser(user)),
 })
 
 const mapStateToProps = (state) => ({
   user : state.user.user,
-  // userProfile :state.profile.user,
+  userProfile :(state.user.profile && state.user.profile.user) ? state.user.profile.user : {},
   videos : (state.user.profile && state.user.profile.videos) ? state.user.profile.videos : [],
   prev : (state.user.profile && state.user.profile.prevPage) ? state.user.profile.prevPage : false,
   next : (state.user.profile && state.user.profile.nextPage) ? state.user.profile.nextPage : false

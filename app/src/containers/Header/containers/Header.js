@@ -202,7 +202,7 @@ export class HeaderContainer extends Component {
           >
             Sign Out
           </Button>
-          <LinkContainer to={url(`/profile/${user.id_user}`)}>
+          <LinkContainer to={url(`/profile/${user.username}`)}>
           <Button className="logout-btn">
             Profile
           </Button>

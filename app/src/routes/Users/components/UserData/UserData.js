@@ -19,9 +19,13 @@ const UserData = (props) => {
               <h1>{props.user.username}</h1>
             </Col>
             <Col sm={6} style={{textAlign:'center'}}>
-              <ButtonGroup>
-                <Button className="delete-btn" bsStyle="danger" onClick={props.onDelete}>Delete</Button>
-            </ButtonGroup>
+              {
+                props.allowDelete ?
+                  <ButtonGroup>
+                    <Button className="delete-btn" bsStyle="danger" onClick={props.onDelete}>Delete</Button>
+                </ButtonGroup> :
+                <div></div>
+              }
             </Col>
           </Row>
 
@@ -56,7 +60,8 @@ UserData.propTypes = {
   actualDelete:PropTypes.func,
   close:PropTypes.func,
   showModal: PropTypes.bool,
-  user : PropTypes.Object
+  user : PropTypes.Object,
+  allowDelete : PropTypes.bool
 }
 
 UserData.defaultProps = {

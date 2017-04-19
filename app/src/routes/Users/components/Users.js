@@ -10,7 +10,8 @@ export class Users extends Component{
     this.state = {
       user : {},
       videos : [],
-      showModal: false
+      showModal: false,
+      allowDelete :false
     }
   }
 
@@ -33,7 +34,7 @@ export class Users extends Component{
     if (!this.props.user) {
       browserHistory.push('/')
     } else {
-      this.props.getProfile(1, this.props.user.username)
+      this.props.getProfile(1, this.props.params.username)
     }
   }
 
@@ -44,20 +45,24 @@ export class Users extends Component{
   close(){
     this.setState({ showModal: false });
   }
-
   actualDelete () {
-    this.props.deleteUser(this.props.user)
+    this.close()
+    this.props.deleteUser()
   }
 
   render (){
-    const { user } = this.props
-    const { videos } = this.props
+    const  user  = this.props.params.username === this.props.user.username ? this.props.user : this.props.userProfile
+    const videos = (this.props.videos) ? this.props.videos : []
     const { prev } = this.props
     const { next } = this.props
+    const allowDelete = user.username === this.props.user.username? true : false
     return (
       <div className="container">
-        <UsersData user={user} showModal={this.state.showModal}
-          onDelete={this.onDelete.bind(this)} actualDelete={this.actualDelete}
+        <UsersData allowDelete={allowDelete}
+          user={user}
+          showModal={this.state.showModal}
+          onDelete={this.onDelete.bind(this)}
+          actualDelete={this.actualDelete.bind(this)}
           close={this.close.bind(this)}/>
         {videos.map(video => (
           <VideoCard

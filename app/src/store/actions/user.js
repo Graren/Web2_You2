@@ -1,6 +1,7 @@
 import axios from 'utils/axios'
 import { UserTypes } from '../user'
 import { stringify as qs} from 'qs'
+import { browserHistory } from 'react-router'
 
 export const login = (email, password) => (dispatch, getState) => {
   dispatch({ type: UserTypes.LOGIN })
@@ -9,7 +10,6 @@ export const login = (email, password) => (dispatch, getState) => {
   fd.append("password", password);
   return axios.post('api/login.php', fd)
     .then( ({data : data}) => {
-      console.log(data);
       dispatch({
         type: UserTypes.LOGIN_SUCCESS,
         user: data.data
@@ -48,6 +48,7 @@ export const signout = () => (dispatch, getState) => {
   dispatch({ type: UserTypes.SIGNOUT })
   return axios.post('api/logout.php', {})
     .then(() => {
+      browserHistory.push('/')
       dispatch({
         type: UserTypes.SIGNOUT_SUCCESS
       })
@@ -60,12 +61,11 @@ export const signout = () => (dispatch, getState) => {
     })
 }
 
-export const deleteUser = (user) => (dispatch, getState) => {
+export const deleteUser = () => (dispatch, getState) => {
   dispatch({ type: UserTypes.DELETE_USER })
-  const fd = new FormData();
-  fd.append("email", user.email);
-  return axios.post('api/closeAccount.php',fd )
-    .then(() => {
+  return axios.post('api/closeAccount.php')
+    .then(({ data }) => {
+      browserHistory.push("/")
       dispatch({
         type: UserTypes.DELETE_SUCCESS
       })
