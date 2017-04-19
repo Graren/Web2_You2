@@ -13,12 +13,12 @@
     session_start();
     $res = new YaySon();
     header("Content-Type: application/json");
-        if(!isset($_SESSION["email"]) or !isset($_SESSION["name"]) or $_SERVER['REQUEST_METHOD'] !== "POST"){
+        if(!isset($_SESSION["email"]) or !isset($_SESSION["name"]) or $_SERVER['REQUEST_METHOD'] !== "GET"){
             $res->add("status",403);
             $res->add("message","Forbidden");
         }
         else{
-            $id_video = $_POST['id_video'];
+            $id_video = $_GET['id_video'];
             $likes = getLastWeekLikes($id_video);
             $dislikes = getLastWeekDislikes($id_video);
             if($likes && $dislikes){

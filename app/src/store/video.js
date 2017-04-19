@@ -6,7 +6,10 @@ import * as actions from './actions/video'
 const { Types, Creators } = createActions({
   getVideo: actions.getVideo,
   getVideoSuccess: ['video'],
-  getVideoError: ['error']
+  getVideoError: ['error'],
+  getVideoReport: actions.getVideoReport,
+  getVideoReportSuccess : ['report'],
+  getVideoReportError : ['error']
 })
 
 export const VideoTypes = Types
@@ -17,7 +20,8 @@ export default Creators
 export const INITIAL_STATE = {
   video: null,
   fetching: false,
-  error: null
+  error: null,
+  report: null
 }
 
 /* ------------- Reducers ------------- */
@@ -33,6 +37,12 @@ export const getVideoSuccess = (state, { video }) => Object.assign({}, state, {
   error: null
 })
 
+export const getVideoReportSuccess = (state, { report }) => Object.assign({}, state, {
+  report,
+  fetching: false,
+  error: null
+})
+
 export const error = (state, { error }) => Object.assign({}, state, {
   error,
   fetching: false
@@ -43,5 +53,8 @@ export const error = (state, { error }) => Object.assign({}, state, {
 export const reducer = createReducer(INITIAL_STATE, {
   [Types.GET_VIDEO]: request,
   [Types.GET_VIDEO_SUCCESS]: getVideoSuccess,
-  [Types.GET_VIDEO_ERROR]: error
+  [Types.GET_VIDEO_ERROR]: error,
+  [Types.GET_VIDEO_REPORT]: request,
+  [Types.GET_VIDEO_REPORT_SUCCESS]: getVideoReportSuccess,
+  [Types.GET_VIDEO_REPORT_ERROR]: error
 })
