@@ -9,7 +9,8 @@ export class Users extends Component{
     super(props)
     this.state = {
       user : {},
-      videos : []
+      videos : [],
+      showModal: false
     }
   }
 
@@ -18,8 +19,14 @@ export class Users extends Component{
     videos : PropTypes.array,
     getProfile : PropTypes.func,
     deleteUser: PropTypes.func,
-    prev : PropTypes.bool,
-    next : PropTypes.bool
+    prev : PropTypes.oneOfType([
+      PropTypes.number,
+      PropTypes.bool
+    ]),
+    next : PropTypes.oneOfType([
+      PropTypes.number,
+      PropTypes.bool
+    ])
   }
 
   componentDidMount (){
@@ -30,16 +37,28 @@ export class Users extends Component{
     }
   }
 
+  onDelete(){
+    this.setState({ showModal: true })
+  }
+
+  close(){
+    this.setState({ showModal: false });
+  }
+
+  actualDelete () {
+    this.props.deleteUser(this.props.user)
+  }
+
   render (){
     const { user } = this.props
     const { videos } = this.props
     const { prev } = this.props
     const { next } = this.props
-    console.log(this.props)
-
     return (
       <div className="container">
-        <UsersData user={user}/>
+        <UsersData user={user} showModal={this.state.showModal}
+          onDelete={this.onDelete.bind(this)} actualDelete={this.actualDelete}
+          close={this.close.bind(this)}/>
         {videos.map(video => (
           <VideoCard
             title={video.name}

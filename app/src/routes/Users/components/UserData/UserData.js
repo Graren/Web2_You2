@@ -5,7 +5,8 @@ import {
   Col,
   Grid,
   Button,
-  ButtonGroup
+  ButtonGroup,
+  Modal
 } from 'react-bootstrap'
 
 const UserData = (props) => {
@@ -19,7 +20,6 @@ const UserData = (props) => {
             </Col>
             <Col sm={6} style={{textAlign:'center'}}>
               <ButtonGroup>
-                <Button className="edit-btn" bsStyle="info" onClick={props.onEdit}>Edit</Button>
                 <Button className="delete-btn" bsStyle="danger" onClick={props.onDelete}>Delete</Button>
             </ButtonGroup>
             </Col>
@@ -33,20 +33,34 @@ const UserData = (props) => {
               </Col>
           </Row>
         </Grid>
+
       </div>
+      <Modal show={props.showModal} onHide={props.close}>
+          <Modal.Header closeButton>
+            <Modal.Title>BACK THE F UP WE GOT A BAD GUY HERE</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            ARE YOU SURE YOU WANT OUT OF THIS GREATNESS
+          </Modal.Body>
+          <Modal.Footer>
+            <Button onClick={props.close}>No, I love it</Button>
+            <Button onClick={props.actualDelete}>Yup</Button>
+          </Modal.Footer>
+        </Modal>
     </div>
   )
 }
 
 UserData.propTypes = {
   onDelete : PropTypes.func,
-  onEdit : PropTypes.func,
+  actualDelete:PropTypes.func,
+  close:PropTypes.func,
+  showModal: PropTypes.bool,
   user : PropTypes.Object
 }
 
 UserData.defaultProps = {
-  onDelete: () => {console.log("Deleted")},
-  onEdit:  () => {console.log("Edit")}
+  onDelete: () => {console.log("Deleted")}
 }
 
 export default UserData
