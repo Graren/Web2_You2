@@ -170,6 +170,7 @@
                     $tmp->add("description",$row['description']);
                     $tmp->add("name",$row['video_name']);
                     $tmp->add("date",$row['date']);
+                    $tmp->add("length",$row['length']);
                     $tmp->add("path",$row['path']);
                     $tmp->add("username",$row['uploader']);
                     $tmp->add("tags",$tags);
