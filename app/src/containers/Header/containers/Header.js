@@ -45,7 +45,7 @@ export class HeaderContainer extends Component {
     if (nextProps.user !== this.props.user) {
       this.setState({
         isAuthDropdownOpen: false,
-        isSignupDropdownOpen: false,
+        isSignupDropdownOpen: false
       })
     }
   }
@@ -187,7 +187,6 @@ export class HeaderContainer extends Component {
   renderUserDropdown = () => {
     const { isAuthDropdownOpen } = this.state
     const { user } = this.props
-    console.log(this.props);
     return (
       <NavDropdown
         eventKey={3}

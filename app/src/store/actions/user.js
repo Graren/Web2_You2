@@ -78,9 +78,9 @@ export const deleteUser = (user) => (dispatch, getState) => {
     })
 }
 
-export const getProfile = (page) => (dispatch, getState) => {
+export const getProfile = (page, username) => (dispatch, getState) => {
   dispatch({ type: UserTypes.GET_PROFILE })
-  return axios.get('api/profile.php', { params: { page } })
+  return axios.get('api/profile.php', { params: { page, username } })
     .then(({ data }) => {
       console.log(data)
       dispatch({

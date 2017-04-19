@@ -13,7 +13,7 @@ import UserActions from 'store/user'
 
 const mapDispatchToProps = (dispatch) => ({
   //eslint-disable-next-line
-  getProfile: (page) => dispatch(UserActions.getProfile(page)),
+  getProfile: (page,username) => dispatch(UserActions.getProfile(page,username)),
   deleteUser: (user) => dispatch(UserActions.deleteUser(user))
   // editUser: (user) => dispatch(UserActions.editUser(user)),
 })

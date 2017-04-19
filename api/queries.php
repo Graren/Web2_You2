@@ -43,6 +43,30 @@
     }
 
 
+    function countUserVideos($id_user){
+        $pdo = GLOBALS::getPDO();
+        $res = new YaySon();
+        $sql = "select count(id_video) as count from video where id_user=$id_user";
+        $stmt = $pdo->query($sql);
+        if($stmt === false){
+            $res = false;;
+        }
+        else{
+            $arr = $stmt->fetch(PDO::FETCH_ASSOC);
+            if( $arr === false ){
+
+                $res = false;;
+            }else{
+
+                $pageNum = $arr['count'] % 10 === 0 ? (floor($arr['count'] / 10 )): floor(($arr['count'] / 10) )+1;
+                $pageNum = $pageNum === 0 ? 1 : $pageNum;
+                $res->add("count",$pageNum);;
+            }
+        }
+        return $res;
+
+    }
+
     function getVideoData($id_video){
         $pdo = GLOBALS::getPDO();
         $res = new YaySon();
@@ -82,7 +106,7 @@
         $pdo = GLOBALS::getPDO();
         $res = new YaySon();
         $sql = "SELECT video.id_video, video.description, video.name as video_name, video.date, video.length, video.path,
-                users.username as uploader
+                users.username as uploader,  count(*) OVER() as count
                 FROM video
                 INNER JOIN users ON video.id_user = users.id_user ";
         $words = explode(" ",$query);
@@ -103,10 +127,14 @@
         }
         else{
             $arr = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
             if( $arr === false ){
                 $res = false;;
             }else{
                 $tmpArray =array();
+                $numPages = ceil($arr[0]['count'] / 10 );
+                $nextPage = $page < $numPages ? $page+1 : false;
+                $prevPage = $page > 1 ? $page-1 : false;
                 foreach($arr as $row){
                     $tmp = new YaySon;
                     $tmp->add("id_video",$row['id_video']);
@@ -118,6 +146,8 @@
                     array_push($tmpArray,$tmp->getArr());
                 }
                 $res->add("videos",$tmpArray);
+                if($nextPage !== false) $res->add("nextPage",$nextPage);
+                if($prevPage !== false) $res->add("prevPage",$prevPage);
             }
         }
         return $res;
@@ -144,6 +174,9 @@
                 $res = false;;
             }else{
                 $tmpArray =array();
+                $numPages = countUserVideos($id_user);
+                $nextPage = $page < $numPages->get("count") ? $page+1 : false;
+                $prevPage = $page > 1 ? $page-1 : false;
                 foreach($arr as $row){
                     $tmp = new YaySon;
                     $tmp->add("id_video",$row['id_video']);
@@ -161,6 +194,8 @@
                     array_push($tmpArray,$tmp->getArr());
                 }
                 $res->add("videos",$tmpArray);
+                if($nextPage !== false) $res->add("nextPage",$nextPage);
+                if($prevPage !== false) $res->add("prevPage",$prevPage);
             }
         }
         return $res;
@@ -684,7 +719,9 @@ function getProfileData($username,$page){
     $user = getUserData($username);
     $videos = getUserVideosPaginated($user->get('id_user'),$page);
     $res->add('user',$user->getArr());
-    $res->add('videos',$videos->getArr());
+    $res->add('videos',$videos->get("videos"));
+    $videos->get("prevPage") === null? "" : $res->add("prevPage",$videos->get("prevPage"));
+    $videos->get("nextPage") === null? "" : $res->add("nextPage",$videos->get("nextPage"));
     return $res;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -735,3 +772,4 @@ function getThumbnail($id_video){
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////
+

@@ -15,6 +15,7 @@ export class  Users  extends Component{
       videos : []
     }
   }
+
   static propTypes = {
     user : PropTypes.object,
     videos : PropTypes.array,
@@ -22,11 +23,11 @@ export class  Users  extends Component{
     deleteUser: PropTypes.func
   }
 
-  componentDidMount() {
+  componentDidMount(){
     if (!this.props.user) {
       browserHistory.push('/')
     } else {
-      this.props.getProfile(1)
+      this.props.getProfile(3, this.props.user.username)
     }
   }
 
@@ -43,7 +44,6 @@ export class  Users  extends Component{
             id_video={video.id_video}
           />
         ))}
-        <UserVideos />
       </div>
     )
   }
