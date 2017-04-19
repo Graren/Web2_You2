@@ -4,6 +4,7 @@ import Home from './Home'
 import CounterRoute from './Counter'
 import UsersRoute from './Users'
 import SearchRoute from './Search'
+import VideoRoute from './Video'
 import UploadRoute from './Upload'
 /*  Note: Instead of using JSX, we recommend using react-router
     PlainRoute objects to build route definitions.   */
@@ -16,6 +17,7 @@ export const createRoutes = (store) => ({
     CounterRoute(store),
     UsersRoute(store),
     SearchRoute(store),
+    VideoRoute(store)
     UploadRoute(store),
   ]
 })

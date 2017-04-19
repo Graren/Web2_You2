@@ -94,7 +94,6 @@
                     $data = new YaySon();
                     $data->add('id_user',$_SESSION['id_user']);
                     $data->add('description',$_POST["description"]);
-                    $data->add('length',$_POST["length"]);
                     $data->add('name',$_FILES["file"]["name"]);
                     if ( ( ($_FILES["file"]["type"] == "video/mp4")
                         || ($_FILES["file"]["type"] == "video/ogg")
@@ -113,8 +112,9 @@
                                 mkdir(Globals::getProjectRoute(). "../../static");
                             }
                             $tags = explode(",",$_POST["tags"]);
+                            $length = '00:01';
                             $insertResult =insert_video($_SESSION['id_user'],$_FILES["file"]["name"],$_POST["description"],
-                                $_POST["length"],Globals::getVideoPath() . $savedName,$tags);
+                                $length,Globals::getVideoPath() . $savedName,$tags);
 
                             if($insertResult){
                                 move_uploaded_file($_FILES["file"]["tmp_name"],
@@ -129,6 +129,7 @@
 
                                 } catch (Exception $e){
                                     echo $e->getTrace();
+
                                 }
 
                                 $res->add("status",200);
