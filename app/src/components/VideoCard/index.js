@@ -27,6 +27,7 @@ const VideoCard = (props) => {
             <h2 style={{ marginTop: 0 }}>{props.title}</h2>
           </Link>
           <p>{props.description}</p>
+          <Link to={url(`/profile/${props.username}`)}>Subido por: {props.username}</Link>
         </Col>
       </Row>
     </Card>

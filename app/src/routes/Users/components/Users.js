@@ -64,11 +64,12 @@ export class Users extends Component{
           onDelete={this.onDelete.bind(this)}
           actualDelete={this.actualDelete.bind(this)}
           close={this.close.bind(this)}/>
-        {videos.map(video => (
+        {videos && videos.map(video => (
           <VideoCard
             title={video.name}
             description={video.description}
             id_video={video.id_video}
+            username={video.username}
           />
         ))}
         <Pager>

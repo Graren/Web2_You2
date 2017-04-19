@@ -3,7 +3,9 @@ import { IndexLink } from 'react-router'
 import './Header.scss'
 import {
   Navbar,
-  Nav
+  Nav,
+  FormControl,
+  Button
 } from 'react-bootstrap'
 import url from '../../../utils/url'
 
@@ -19,6 +21,9 @@ export const Header = (props) => {
         <Navbar.Toggle />
       </Navbar.Header>
       <Navbar.Collapse>
+        <Nav>
+          {props.renderSearchBar()}
+        </Nav>
         <Nav />
           {props.user ? (
             <Nav pullRight>

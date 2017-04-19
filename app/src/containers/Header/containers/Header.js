@@ -22,6 +22,7 @@ export class HeaderContainer extends Component {
   constructor (props) {
     super(props)
     this.state = {
+      searchQuery: '',
       email: 'admin1@gmail.com',
       password: '12345678',
       username: 'admin',
@@ -69,6 +70,12 @@ export class HeaderContainer extends Component {
   onEmailChange = e => {
     this.setState({
       email: e.target.value
+    })
+  }
+
+  onSearchQueryChange = e => {
+    this.setState({
+      searchQuery: e.target.value
     })
   }
 
@@ -187,6 +194,7 @@ export class HeaderContainer extends Component {
   renderUserDropdown = () => {
     const { isAuthDropdownOpen } = this.state
     const { user } = this.props
+
     return (
       <NavDropdown
         eventKey={3}
@@ -213,12 +221,30 @@ export class HeaderContainer extends Component {
     )
   }
 
+  renderSearchBar = () => {
+    return (
+      <div style={{ display: 'flex' }}>
+        <FormControl
+          style={{ marginTop: '7px' }}
+          type="text"
+          placeholder="Cats"
+          value={this.state.searchQuery}
+          onChange={this.onSearchQueryChange}
+        />
+        <LinkContainer to={url('/search')} query={{q: this.state.searchQuery, page: 1}}>
+          <Button style={{ marginTop: '7px', marginLeft: '15px' }}>Search</Button>
+        </LinkContainer>
+      </div>
+    )
+  }
+
   render () {
     const { user } = this.props
 
     return (
       <Header
         user={user}
+        renderSearchBar={this.renderSearchBar}
         renderUserDropdown={this.renderUserDropdown}
         renderSignupDropdown={this.renderSignupDropdown}
         renderAuthDropdown={this.renderAuthDropdown}

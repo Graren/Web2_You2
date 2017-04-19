@@ -110,7 +110,6 @@
                         {
                             $savedName = RandomString()."_". $_FILES["file"]["name"];
                             if(!file_exists(Globals::getProjectRoute(). "../../static")){
-                                echo "MAKING DIR";
                                 mkdir(Globals::getProjectRoute(). "../../static");
                             }
                             $tags = explode(",",$_POST["tags"]);
