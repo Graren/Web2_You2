@@ -106,17 +106,21 @@
                     FROM users
                     INNER JOIN user_like_video ON users.id_user = user_like_video.id_user
                     WHERE user_like_video.id_video = $id_video
-                    AND where user_like_video.id_action=1";
+                    AND user_like_video.id_action=1";
         $stmt = $pdo->query($sql);
         if($stmt === false){
             $res->add("usersLiked",array());
         }
         else{
-            $arr = $stmt->fetch(PDO::FETCH_ASSOC);
+            $arr = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $tmp = array();
             if( $arr === false ){
                 $res->add("usersLiked",array());
             }else{
-                $res->add("usersLiked",$arr);
+                foreach($arr as $row){
+                    array_push($tmp,$row['username']);
+                }
+                $res->add("usersLiked",$tmp);
             }
         }
         return $res;
