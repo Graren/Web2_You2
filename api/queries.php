@@ -159,9 +159,12 @@
                 $res = false;;
             }else{
                 $tmpArray =array();
-                $numPages = ceil($arr[0]['count'] / 10 );
-                $nextPage = $page < $numPages ? $page+1 : false;
-                $prevPage = $page > 1 ? $page-1 : false;
+                $numPages = false;
+                if(count($arr) > 0){
+                    $numPages = ceil($arr[0]['count'] / 10 );
+                }
+                $nextPage = ($numPages !== false && $page < $numPages )? $page+1 : false;
+                $prevPage = ($numPages !== false && $page > 1 )? $page-1 : false;
                 foreach($arr as $row){
                     $tmp = new YaySon;
                     $tags = getVideoTags($row['id_video']);
@@ -208,14 +211,19 @@
                 $numPages = countUserVideos($id_user);
                 $nextPage = $page < $numPages->get("count") ? $page+1 : false;
                 $prevPage = $page > 1 ? $page-1 : false;
+
                 foreach($arr as $row){
                     $tmp = new YaySon;
                     $tmp->add("id_video",$row['id_video']);
+                    $tags = getVideoTags($row['id_video']);
+                    $tags = $tags === false ? array() : $tags->get("tags");
                     $tmp->add("description",$row['description']);
                     $tmp->add("name",$row['video_name']);
                     $tmp->add("date",$row['date']);
                     $tmp->add("path",$row['path']);
                     $tmp->add("username",$row['uploader']);
+                    $tmp->add("length",$row['length']);
+                    $tmp->add("tags",$tags);
                     $thumb = getThumbnail($row['id_video']);
                     if ($thumb !== false) {
                         $tmp->add("thumbnail", $thumb->getArr());

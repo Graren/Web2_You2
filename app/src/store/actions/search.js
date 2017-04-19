@@ -9,7 +9,7 @@ export const searchVideos = (q, page) => (dispatch, getState) => {
         type: SearchTypes.SEARCH_VIDEOS_SUCCESS,
         videos: data.videos,
         nextPage: data.nextPage,
-        prevPage: data.prevPage,
+        prevPage: data.prevPage
       })
     })
     .catch(error => {

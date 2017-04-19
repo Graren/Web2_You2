@@ -70,6 +70,8 @@ export class Users extends Component{
             description={video.description}
             id_video={video.id_video}
             username={video.username}
+            length={video.length}
+            tags={video.tags}
           />
         ))}
         <Pager>

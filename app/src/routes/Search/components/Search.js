@@ -28,7 +28,6 @@ export class Search extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    console.log(this.state.orderBy)
     if (this.props.location.query.q != prevProps.location.query.q || this.props.location.query.page != prevProps.location.query.page) {
       this.searchVideos()
     }
