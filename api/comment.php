@@ -18,7 +18,7 @@
     }
     else{
         $id_video = $_POST['id_video'];
-        $id_user = $_POST['id_user'];
+        $id_user = $_SESSION['id_user'];
         $comment = $_POST['comment'];
         $resultJSON = insertVideoComment($id_video,$id_user,$comment);
         if($resultJSON->get('created') !== false){

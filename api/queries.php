@@ -15,7 +15,6 @@
         $stmt = $pdo->query($sql_insert);
         if($stmt === false){
             $res = false;;
-
         }
         else{
             $arr = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -154,9 +153,8 @@
                     $tmp->add("path",$row['path']);
                     $tmp->add("username",$row['uploader']);
                     $thumb = getThumbnail($row['id_video']);
-                    if (isset($thumb)) {
+                    if ($thumb !== false) {
                         $tmp->add("thumbnail", $thumb->getArr());
-
                     } else {
                         $tmp->add("thumbnail", "");
                     }
@@ -523,7 +521,7 @@ function getLastWeekDislikes($id_video){
 function getTagByName($tag){
     $pdo = GLOBALS::getPDO();
     $res = new YaySon();
-    $sql_insert = "SELECT id_tag FROM tag WHERE name=$tag";
+    $sql_insert = "SELECT id_tag FROM tag WHERE name=" . $pdo->quote($tag);
     $stmt = $pdo->query($sql_insert);
     if($stmt === false){
         $res->add('found',false);
@@ -721,8 +719,7 @@ function getThumbnail($id_video){
     $sql_insert = "SELECT id_thumbnail,path FROM thumbnail WHERE id_video =$id_video";
     $stmt = $pdo->query($sql_insert);
     if($stmt === false){
-        $res = false;;
-        return;
+        $res = false;
     }
     else{
         $arr = $stmt->fetch(PDO::FETCH_ASSOC);

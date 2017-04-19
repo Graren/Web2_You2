@@ -19,7 +19,7 @@
     }
     else{
         $id_video = $_POST['id_video'];
-        $id_user = $_POST['id_user'];
+        $id_user = $_SESSION['id_user'];
         $resultJSON = likeVideo($id_video,$id_user);
         if($resultJSON->get('created') !== false){
             $res->add("data",$resultJSON->getArr());

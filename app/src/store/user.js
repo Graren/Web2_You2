@@ -49,8 +49,8 @@ export const loginSuccess = (state, { user }) => Object.assign({}, state, {
 })
 
 //I AM NOT SURE WHAT THE FUCK DOES THE API RETURN SO BEWARE
-export const getProfileSuccess = (state, { profile }) => Object.assign({}, state, {
-  profile,
+export const getProfileSuccess = (state, { profile } ) => Object.assign({}, state, {
+  profile : profile,
   fetching: false,
   error: null
 })
