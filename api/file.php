@@ -20,6 +20,7 @@
         else{
             $data->add("comments",getVideoComments($id_video)->get('comments'));
             $data->add("tags",getVideoTags($id_video)->get('tags'));
+            $data->add("usersLiked",getUserLikes($id_video)->get("usersLiked"));
             $res->add("status",200);
             $res->add("data", $data->getArr());
         }

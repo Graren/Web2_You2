@@ -97,6 +97,29 @@
             }
         }
         return $res;
+    }
+
+    function getUserLikes($id_video){
+        $pdo = GLOBALS::getPDO();
+        $res = new YaySon();
+        $sql = "SELECT users.username
+                    FROM users
+                    INNER JOIN user_like_video ON users.id_user = user_like_video.id_user
+                    WHERE user_like_video.id_video = $id_video
+                    AND where user_like_video.id_action=1";
+        $stmt = $pdo->query($sql);
+        if($stmt === false){
+            $res->add("usersLiked",array());
+        }
+        else{
+            $arr = $stmt->fetch(PDO::FETCH_ASSOC);
+            if( $arr === false ){
+                $res->add("usersLiked",array());
+            }else{
+                $res->add("usersLiked",$arr);
+            }
+        }
+        return $res;
 
     }
 
@@ -123,7 +146,7 @@
         $sql .= "LIMIT $limit OFFSET $offset";
         $stmt = $pdo->query($sql);
         if($stmt === false){
-            $res = false;;
+            $res = false;
         }
         else{
             $arr = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -137,12 +160,15 @@
                 $prevPage = $page > 1 ? $page-1 : false;
                 foreach($arr as $row){
                     $tmp = new YaySon;
+                    $tags = getVideoTags($row['id_video']);
+                    $tags = $tags === false ? array() : $tags->get("tags");
                     $tmp->add("id_video",$row['id_video']);
                     $tmp->add("description",$row['description']);
                     $tmp->add("name",$row['video_name']);
                     $tmp->add("date",$row['date']);
                     $tmp->add("path",$row['path']);
                     $tmp->add("username",$row['uploader']);
+                    $tmp->add("tags",$tags);
                     array_push($tmpArray,$tmp->getArr());
                 }
                 $res->add("videos",$tmpArray);
@@ -495,13 +521,12 @@ function getLastWeekDislikes($id_video){
                     WHERE video.id_video = $id_video";
     $stmt = $pdo->query($sql);
     if($stmt === false){
-        $res = false;;
-        return;
+        $res = false;
     }
     else{
         $arr = $stmt->fetchAll(PDO::FETCH_ASSOC);
         if( $arr === false ){
-            $res = false;;
+            $res = false;
         }else{
             $tmpArray =array();
             foreach($arr as $row){
@@ -534,12 +559,11 @@ function getLastWeekDislikes($id_video){
     $stmt = $pdo->query($sql);
     if($stmt === false){
         $res = false;;
-        return;
     }
     else{
         $arr = $stmt->fetchAll(PDO::FETCH_ASSOC);
         if( $arr === false ){
-            $res = false;;
+            $res = false;
         }else{
             $tmpArray =array();
             foreach($arr as $row){
@@ -652,8 +676,7 @@ function signUp($email,$password,$username){
                     "true".") RETURNING id_user,email,username";
     $stmt = $pdo->query($sql);
     if($stmt === false){
-        $res = false;;
-        return;
+        $res = false;
     }
     else{
         $arr = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -676,8 +699,7 @@ function closeAcount($email){
         "AND is_active=true " ."RETURNING id_user";
     $stmt = $pdo->query($sql_insert);
     if($stmt === false){
-        $res = false;;
-        return;
+        $res = false;
     }
     else{
         $arr = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -698,8 +720,7 @@ function getUserData($username){
             WHERE username=" . $pdo->quote($username) ;
     $stmt = $pdo->query($sql);
     if($stmt === false){
-        $res = false;;
-        return;
+        $res = false;
     }
     else{
         $arr = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -736,8 +757,7 @@ function insertThumbNail($path,$id_video){
                     VALUES($id_video," .$pdo->quote($path). ") RETURNING id_thumbnail ";
     $stmt = $pdo->query($sql_insert);
     if($stmt === false){
-        $res = false;;
-        return;
+        $res = false;
     }
     else{
         $arr = $stmt->fetch(PDO::FETCH_ASSOC);
