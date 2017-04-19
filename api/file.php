@@ -95,7 +95,9 @@
                     $data = new YaySon();
                     $data->add('id_user',$_SESSION['id_user']);
                     $data->add('description',$_POST["description"]);
-                    $length = (int) shell_exec("ffmpeg -i ". $_FILES["file"]["tmp_name"] . " 2>&1 | grep \"Duration\"| cut -d ' ' -f 4 | sed s/,// | sed 's@\..*@@g' | awk '{ split($1, A, \":\"); split(A[3], B, \".\"); print 3600*A[1] + 60*A[2] + B[1] }'");
+                    //$length = (int) shell_exec("ffmpeg -i ". $_FILES["file"]["tmp_name"] . " 2>&1 | grep \"Duration\"| cut -d ' ' -f 4 | sed s/,// | sed 's@\..*@@g' | awk '{ split($1, A, \":\"); split(A[3], B, \".\"); print 3600*A[1] + 60*A[2] + B[1] }'");
+                    $length = shell_exec("ffmpeg -i ". $_FILES["file"]["tmp_name"] . " 2>&1 | grep \"Duration\"| cut -d ' ' -f 4 | sed s/,// | sed 's@\..*@@g' | awk '{ split($1, A, \":\"); split(A[3], B, \".\"); print 3600*A[1] + 60*A[2] + B[1] }'");
+                    $length = explode("\n",$length)[1];
                     $data->add('length', $length);
                     $data->add('name',$_FILES["file"]["name"]);
                     $data->add('uploader',$_SESSION['name']); 
