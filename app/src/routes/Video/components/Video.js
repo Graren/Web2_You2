@@ -72,8 +72,9 @@ export class Video extends Component{
   }
 
   render (){
-    const { video, report } = this.props
-    const chartData = generateChartData(DAYS.map(day => report.likes[day][day]), DAYS.map(day => report.dislikes[day][day]))
+    const video = this.props.video ? this.props.video : {}
+    const report = this.props.report? this.props.report : {}
+    const chartData = report.likes ? generateChartData(DAYS.map(day => report.likes[day][day]), DAYS.map(day => report.dislikes[day][day])) : []
     return (
       <div className="container">
         <Row>
@@ -86,24 +87,24 @@ export class Video extends Component{
             <h1>{video.name}</h1>
             <p>{video.description}</p>
             <h5>Tags: {video.tags && video.tags.map(tag => tag.name).join(', ')}</h5>
-            <h5>Liked by {video.usersLiked.map(userLiked =>
+            <h5>Liked by {video.usersLiked ? video.usersLiked.map(userLiked =>
               <span>
                 <Link to={url(`/profile/${userLiked}`)}>{userLiked}</Link>
                 <span> </span>
               </span>
-            )}</h5>
+            ) : "NO ONE"}</h5>
             <h2 style={{color: 'grey'}}>Comments</h2>
             <FormGroup onChange={this.onCommentChange} value={this.state.comment}>
               <ControlLabel>Comment</ControlLabel>
               <FormControl componentClass="textarea" placeholder="Nice video" />
             </FormGroup>
             <Button onClick={() => this.props.addComment(video.id_video, this.state.comment)}>Add Comment</Button>
-            {video.comments.map(comment => (
+            {video.comments? video.comments.map(comment => (
               <Card>
                 <h5>{comment.comment}</h5>
                 <Link to={url(`/profile/${comment.username}`)}>Comment by: {comment.username}</Link>
               </Card>
-            ))}
+            )): "NONE"}
           </Col>
           <Col md={6}>
             <Line data={chartData} />
